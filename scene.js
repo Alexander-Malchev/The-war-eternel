@@ -42,8 +42,8 @@ class Scene extends Phaser.Scene {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
         }
-        this.objects.push( this.add.image (window.innerWidth + 100, window.innerHeight - 50, `p7`));
-        this.objects2.push( this.add.image (window.innerWidth + 100, 130, `p7`));
+        this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`));
+        this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`));
     }
     update (delta) {
         br++
@@ -51,19 +51,25 @@ class Scene extends Phaser.Scene {
             this.objects[0].destroy();
             this.objects.shift()
         }
+
+        if (this.key.space.isDown) {
+            console.log(br)
+        }
       if ( br % 100 == 0 ) {
-            var image = this.add.image(100000000, 0, "p" + random(1, 6)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
+            var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
             image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
 
-            var image2 = this.add.image(100000000, 0, "p" + random(1, 6)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
+            var image2 = this.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
             image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50? y2 : window.innerHeight - 200
             this.objects2.push( image2 );
         }
 
-        
+        if (br % 130 == 0 ) {
+            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`) )
+        }
 
         for ( let i = 0; i < this.objects.length; i++ ) {
             this.objects[i].x -= 7;
