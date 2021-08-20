@@ -48,16 +48,17 @@ class Scene extends Phaser.Scene {
             this.objects[0].destroy();
             this.objects.shift()
         }
-        if ( this.objects[this.objects.length - 1].x + (this.objects[this.objects.length - 1].width + 50) <= window.innerWidth ) {
-            const image = this.add.image(100000000, 0, `p${random(1, 6)}`), y = this.objects[this.objects.length - 1].y + random (-100, 100)
+        if ( this.objects[this.objects.length - 1].x + (this.objects[this.objects.length - 1].width) <= window.innerWidth ) {
+            const image = this.add.image(100000000, 0, "p" + random(1, 6)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
-            image.y = y > 150 && y < window.innerHeight - 50 ? y : window.innerHeight - 50
+            image.y = y > 150 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
         }
 
         for ( let i = 0; i < this.objects.length; i++ ) {
             this.objects[i].x -= 5;
-        }
+        } 
+
     }
 }
 
