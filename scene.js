@@ -5,7 +5,7 @@ var camera = {
     x: 1,
     y: 7
 }
-
+   var br = 0
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -27,6 +27,7 @@ class Scene extends Phaser.Scene {
     }
     create () {
         this.objects = []
+        this.objects2 = []
         var config = {
             key: 'Soudier',
             frames: this.anims.generateFrameNumbers('player', { start: 0, end: 23, first: 23 }),
@@ -44,21 +45,24 @@ class Scene extends Phaser.Scene {
         this.objects.push( this.add.image (window.innerWidth + 100, window.innerHeight - 50, `p5`));
     }
     update (delta) {
+        br++
         if ( this.objects[0].x <= 0 - this.objects[0].width ) {
             this.objects[0].destroy();
             this.objects.shift()
         }
-        if ( this.objects[this.objects.length - 1].x + (this.objects[this.objects.length - 1].width) <= window.innerWidth ) {
+        if ( br % 100 == 0 ) {
             const image = this.add.image(100000000, 0, "p" + random(1, 6)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
-            image.y = y > 150 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
+            image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
         }
 
-        for ( let i = 0; i < this.objects.length; i++ ) {
-            this.objects[i].x -= 5;
-        } 
+        
 
+        for ( let i = 0; i < this.objects.length; i++ ) {
+            this.objects[i].x -= 7;
+        } 
+        
     }
 }
 
