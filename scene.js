@@ -51,7 +51,7 @@ class Scene extends Phaser.Scene {
             this.objects[0].destroy();
             this.objects.shift()
         }
-      if ( br % 100 == 0 ) {
+      if ( br % 150 == 0 ) {
             var image = this.add.image(100000000, 0, "p" + random(1, 6)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
             image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
