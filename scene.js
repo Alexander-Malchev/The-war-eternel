@@ -63,7 +63,7 @@ class Scene extends Phaser.Scene {
 
             var image2 = this.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
-            image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50? y2 : window.innerHeight - 200
+            image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50 ? y2 : window.innerHeight / 2 - 100
             this.objects2.push( image2 );
         }
 
