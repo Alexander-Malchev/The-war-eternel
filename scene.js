@@ -28,6 +28,7 @@ class Scene extends Phaser.Scene {
 
     }
     create () {
+        //objects
         this.objects = []
         this.objects2 = []
 
@@ -47,7 +48,7 @@ class Scene extends Phaser.Scene {
         this.anims.create(config);
     
         this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier'); //animated player
-        this.player.setVelocity(0, 0)
+        this.player.setGravityY(250)
         this.player.setWorldBounds = true;
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
@@ -58,14 +59,12 @@ class Scene extends Phaser.Scene {
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
     }
     update (delta) {
-        br++; // counting updates
-       // this.player.x = this.input.mousePointer.x;
+        br++; //counting frames
 
-        this.input.keyboard.on("keyup_SPACE", function (e) { //keyup event for space
-            this.player.setVelocity(0, -100);  //jumping
-            console.log("Space pressed.")    //debugging
-        }, this)
-      if ( br % 100 == 0 ) { //every 100 updates
+        this.key.space.on("up", (e) => {
+            this.player.setVelocity(0, -200)
+        })
+       if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
             var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
