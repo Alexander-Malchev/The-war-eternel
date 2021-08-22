@@ -49,7 +49,6 @@ class Scene extends Phaser.Scene {
     
         this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier'); //animated player
         this.player.setGravityY(250)
-        this.player.setWorldBounds = true;
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
