@@ -71,7 +71,7 @@ class Scene extends Phaser.Scene {
                 this.player.setVelocity(0, -380)
                 jumps--;
                 return;
-            }
+            } //asd
             if ( jumps > 0 ) {
                 this.player.setVelocity(0, -380)
                 jumps--;
