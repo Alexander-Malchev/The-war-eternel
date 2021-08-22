@@ -57,6 +57,9 @@ class Scene extends Phaser.Scene {
         // this.cameras.main.startFollow(this.player);
         this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`)); //adding platform bottom
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
+
+        this.player.setBounce(0.2);
+        this.player.setCollideWorldBounds(true);
     }
     update (delta) {
         br++; //counting frames
