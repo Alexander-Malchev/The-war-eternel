@@ -59,6 +59,7 @@ class Scene extends Phaser.Scene {
 
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
+
     }
     update (delta) {
         br++; //counting frames
@@ -68,20 +69,28 @@ class Scene extends Phaser.Scene {
         })
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
-            var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
+            var image = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
             image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
+            this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
+            this.objects[this.objects.length -1].body.pushable = false
 
             //spawning platform from top
-            var image2 = this.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
+            var image2 = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
             image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50 ? y2 : window.innerHeight / 2 - 100
             this.objects2.push( image2 );
+            this.physics.add.collider(this.player, this.objects2[this.objects2.length - 1]);
+            this.objects2[this.objects2.length -1].body.pushable = false
+
         }
 
         if (br % 130 == 0 ) { //on every 130 updates
-            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
+            this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
+            this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
+            this.objects[this.objects.length -1].body.pushable = false
+
         }
 
         for ( let i = 0; i < this.objects.length; i++ ) { //looping all platforms from bottom
