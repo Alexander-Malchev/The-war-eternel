@@ -31,8 +31,9 @@ class Scene extends Phaser.Scene {
         this.objects = []
         this.objects2 = []
 
-        // this.bg = this.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, "bg").setOrigin(0, 0);
+        //adding background image
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
+        //scaling background
         this.bg.scaleX = window.innerWidth / 1000;
         this.bg.scaleY = window.innerHeight / 527;
 
@@ -45,63 +46,65 @@ class Scene extends Phaser.Scene {
     
         this.anims.create(config);
     
-        this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier');
+        this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier'); //animated player
         this.player.setVelocity(0, 0)
         this.player.setWorldBounds = true;
         this.key = {
-            space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
-            e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+            space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
+            e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
         }
         // this.cameras.main.startFollow(this.player);
-        this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`));
-        this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`));
+        this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`)); //adding platform bottom
+        this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
     }
     update (delta) {
-        br++
-        this.player.x = this.input.mousePointer.x;
+        br++; //counting frames
+        this.player.x = this.input.mousePointer.x; //player X is mouse X
 
-        this.input.keyboard.on("keyup_SPACE", function (e) {
-            this.player.setVelocity(0, -100);  
-            console.log("Space pressed.")          
+        this.input.keyboard.on("keyup_SPACE", function (e) { //keyup event for space
+            this.player.setVelocity(0, -100);  //jumping
+            console.log("Space pressed.")    //debugging
         }, this)
-      if ( br % 100 == 0 ) {
+      if ( br % 100 == 0 ) { //every 100 updates
+            //spawning platform from bottom
             var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
             image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
 
+            //spawning platform from top
             var image2 = this.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
             image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50 ? y2 : window.innerHeight / 2 - 100
             this.objects2.push( image2 );
         }
 
-        if (br % 130 == 0 ) {
-            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) )
+        if (br % 130 == 0 ) { //on every 130 updates
+            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
         }
 
-        for ( let i = 0; i < this.objects.length; i++ ) {
-            if ( this.objects[i].x + this.objects[i].width <= 0 ) {
-                this.objects[i].destroy();
-                this.objects[i] = this.objects[this.objects.length - 1];
-                this.objects.pop()
-                continue;
+        for ( let i = 0; i < this.objects.length; i++ ) { //looping all platforms from bottom
+            if ( this.objects[i].x + this.objects[i].width <= 0 ) { //if platform is out of screen
+                this.objects[i].destroy(); //removing image
+                this.objects[i] = this.objects[this.objects.length - 1]; //replacing platform data with last platform's data
+                this.objects.pop()// removing the last platform becouse is duplicated
+                continue; //skiping movement
             }
-            this.objects[i].x -= 7;
+            this.objects[i].x -= 7; //moving platform
         } 
-        for ( let i = 0; i < this.objects2.length; i++ ) {
-            if ( this.objects2[i].x + this.objects2[i].width <= 0 ) {
-                this.objects2[i].destroy();
-                this.objects2[i] = this.objects2[this.objects2.length - 1];
-                this.objects2.pop()
-                continue;
+        for ( let i = 0; i < this.objects2.length; i++ ) { //looping all platforms from top
+            if ( this.objects2[i].x + this.objects2[i].width <= 0 ) { //if platform is out of screen
+                this.objects2[i].destroy(); //removing image 
+                this.objects2[i] = this.objects2[this.objects2.length - 1]; //removing image
+                this.objects2.pop() //removing the last platform becouse is duplicated
+                continue; //skiping movement
             }
-            this.objects2[i].x -= 7;
+            this.objects2[i].x -= 7; //moving platform
         } 
     }
 }
 
-const config = {
+const config = { //phaser stuff
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
@@ -117,4 +120,4 @@ const config = {
     scene: [ Scene ]
 };
 
-var game = new Phaser.Game(config);
+var game = new Phaser.Game(config); //game....
