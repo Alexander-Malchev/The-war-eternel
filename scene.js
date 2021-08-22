@@ -58,8 +58,8 @@ class Scene extends Phaser.Scene {
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
     }
     update (delta) {
-        br++; //counting frames
-        this.player.x = this.input.mousePointer.x; //player X is mouse X
+        br++; // counting updates
+       // this.player.x = this.input.mousePointer.x;
 
         this.input.keyboard.on("keyup_SPACE", function (e) { //keyup event for space
             this.player.setVelocity(0, -100);  //jumping
