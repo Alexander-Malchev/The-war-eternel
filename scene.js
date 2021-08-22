@@ -15,7 +15,8 @@ class Scene extends Phaser.Scene {
         super ({key: "Scene"})
     }
     preload () {
-        this.load.spritesheet("player", "assets/pl.png", { frameWidth: 875 / 5, frameHeight: 202 })
+        // this.load.spritesheet("player", "assets/pl.png", { frameWidth: 875 / 5, frameHeight: 202 })
+        this.load.spritesheet("player", "assets/player-sheet.png", { frameWidth: 732 / 6, frameHeight: 360 / 2 })
         this.load.image("p0", "assets/platform[0].png")
         this.load.image("p1", "assets/platform[1].png")
         this.load.image("p2", "assets/platform[2].png")
@@ -23,38 +24,46 @@ class Scene extends Phaser.Scene {
         this.load.image("p4", "assets/platform[4].png")
         this.load.image("p5", "assets/platform[5].png")
         this.load.image("p6", "assets/platform[6].png")
+        this.load.image("bg", "assets/bg.png")
 
     }
     create () {
         this.objects = []
         this.objects2 = []
+
+        // this.bg = this.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, "bg").setOrigin(0, 0);
+        this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
+        this.bg.scaleX = window.innerWidth / 1000;
+        this.bg.scaleY = window.innerHeight / 527;
+
         var config = {
             key: 'Soudier',
-            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 23, first: 23 }),
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4, first: 0 }),
             frameRate: 20,
             repeat: -1
         };
     
         this.anims.create(config);
     
-        this.player = this.add.sprite(400, 300, 'player').play('Soudier');
+        this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier');
+        this.player.setVelocity(0, 0)
+        this.player.setWorldBounds = true;
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE),
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
         }
+        // this.cameras.main.startFollow(this.player);
         this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`));
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`));
     }
     update (delta) {
         br++
-        if ( this.objects[0].x <= 0 - this.objects[0].width ) {
-            this.objects[0].destroy();
-            this.objects.shift()
-        }
+        this.player.x = this.input.mousePointer.x;
 
-        if (this.key.space.isDown) {
-            console.log(br)
-        }
+        this.input.keyboard.on("keyup_SPACE", function (e) {
+            this.player.setVelocity(0, -100);  
+            console.log("Space pressed.")          
+        }, this)
       if ( br % 100 == 0 ) {
             var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
@@ -68,13 +77,25 @@ class Scene extends Phaser.Scene {
         }
 
         if (br % 130 == 0 ) {
-            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`) )
+            this.objects.push ( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) )
         }
 
         for ( let i = 0; i < this.objects.length; i++ ) {
+            if ( this.objects[i].x + this.objects[i].width <= 0 ) {
+                this.objects[i].destroy();
+                this.objects[i] = this.objects[this.objects.length - 1];
+                this.objects.pop()
+                continue;
+            }
             this.objects[i].x -= 7;
         } 
         for ( let i = 0; i < this.objects2.length; i++ ) {
+            if ( this.objects2[i].x + this.objects2[i].width <= 0 ) {
+                this.objects2[i].destroy();
+                this.objects2[i] = this.objects2[this.objects2.length - 1];
+                this.objects2.pop()
+                continue;
+            }
             this.objects2[i].x -= 7;
         } 
     }
@@ -90,7 +111,8 @@ const config = {
         default: 'arcade',
         arcade: {
             debug: true
-        }
+        }, 
+        gravity: {y: 200}
     },
     scene: [ Scene ]
 };
