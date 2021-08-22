@@ -45,7 +45,7 @@ class Scene extends Phaser.Scene {
     
         this.anims.create(config);
     
-        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'player').play('Soudier').setScale(0.5);;
+        this.player = this.physics.add.sprite(window.innerWidth / 4, window.innerHeight - window.innerHeight / 4, 'player').play('Soudier').setScale(0.5);;
         this.player.setVelocity(0, 0)
         this.player.setWorldBounds = true;
         this.key = {
@@ -55,15 +55,17 @@ class Scene extends Phaser.Scene {
         // this.cameras.main.startFollow(this.player);
         this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`));
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`));
-    }
-    update (delta) {
-        br++
-       // this.player.x = this.input.mousePointer.x;
 
         this.input.keyboard.on("keyup_SPACE", function (e) {
             this.player.setVelocity(0, -100);  
             console.log("Space pressed.")          
         }, this)
+    }
+    update (delta) {
+        br++
+       // this.player.x = this.input.mousePointer.x;
+
+        
       if ( br % 100 == 0 ) {
             var image = this.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
