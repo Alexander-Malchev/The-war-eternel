@@ -47,8 +47,8 @@ class Scene extends Phaser.Scene {
     
         this.anims.create(config);
     
-        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier'); //animated player
-        this.player.setGravityY(380)
+        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier').setScale(0.4); //animated player
+        this.player.setGravityY(600)
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
@@ -68,12 +68,12 @@ class Scene extends Phaser.Scene {
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
-                this.player.setVelocity(0, -380)
+                this.player.setVelocity(0, -600)
                 jumps--;
                 return;
             } //asd
             if ( jumps > 0 ) {
-                this.player.setVelocity(0, -380)
+                this.player.setVelocity(0, -600)
                 jumps--;
             }
         })
@@ -89,7 +89,7 @@ class Scene extends Phaser.Scene {
             //spawning platform from top
             var image2 = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
-            image2.y = y2 > 100 &&  y2 < window.innerHeight / 2 - 50 ? y2 : window.innerHeight / 2 - 100
+            image2.y = y2 > 200 &&  y2 < window.innerHeight / 2 - 50 ? y2 : window.innerHeight / 2 - 100
             this.objects2.push( image2 );
             this.physics.add.collider(this.player, this.objects2[this.objects2.length - 1]);
             this.objects2[this.objects2.length -1].body.pushable = false
@@ -140,4 +140,4 @@ const config = { //phaser stuff
     scene: [ Scene ]
 };
 
-var game = new Phaser.Game(config); //game....
+var game = new Phaser.Game(config);
