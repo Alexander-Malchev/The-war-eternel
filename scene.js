@@ -5,7 +5,7 @@ var camera = {
     x: 1,
     y: 7
 }
-   var br = 0
+   var br = 0, jumps = 2
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -47,8 +47,8 @@ class Scene extends Phaser.Scene {
     
         this.anims.create(config);
     
-        this.player = this.physics.add.sprite(100, window.innerHeight - 190, 'player').play('Soudier'); //animated player
-        this.player.setGravityY(250)
+        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier'); //animated player
+        this.player.setGravityY(380)
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
@@ -57,15 +57,25 @@ class Scene extends Phaser.Scene {
         this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`)); //adding platform bottom
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
 
-        this.player.setBounce(0.2);
+        // this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
+        this.player.body.pushable = true;
 
     }
     update (delta) {
         br++; //counting frames
 
         this.key.space.on("up", (e) => {
-            this.player.setVelocity(0, -200)
+            if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
+                jumps = 2;
+                this.player.setVelocity(0, -380)
+                jumps--;
+                return;
+            }
+            if ( jumps > 0 ) {
+                this.player.setVelocity(0, -380)
+                jumps--;
+            }
         })
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
