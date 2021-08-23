@@ -5,7 +5,7 @@ var camera = {
     x: 1,
     y: 7
 }
-   var br = 0, jumps = 2
+   var br = 0, jumps = 2, gravity = 800
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -16,7 +16,7 @@ class Scene extends Phaser.Scene {
     }
     preload () {
         // this.load.spritesheet("player", "assets/pl.png", { frameWidth: 875 / 5, frameHeight: 202 })
-        this.load.spritesheet("player", "assets/player-sheet.png", { frameWidth: 732 / 6, frameHeight: 360 / 2 })
+        this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
         this.load.image("p0", "assets/platform[0].png")
         this.load.image("p1", "assets/platform[1].png")
         this.load.image("p2", "assets/platform[2].png")
@@ -33,6 +33,7 @@ class Scene extends Phaser.Scene {
         this.objects2 = []
 
         //adding background image
+        
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
         //scaling background
         this.bg.scaleX = window.innerWidth / 1000;
@@ -47,8 +48,8 @@ class Scene extends Phaser.Scene {
     
         this.anims.create(config);
     
-        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier').setScale(0.4); //animated player
-        this.player.setGravityY(600)
+        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier').setScale(0.7); //animated player
+        this.player.setGravityY(gravity)
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
@@ -68,12 +69,12 @@ class Scene extends Phaser.Scene {
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
-                this.player.setVelocity(0, -600)
+                this.player.setVelocity(0, -gravity)
                 jumps--;
                 return;
             } //asd
             if ( jumps > 0 ) {
-                this.player.setVelocity(0, -600)
+                this.player.setVelocity(0, -gravity)
                 jumps--;
             }
         })
