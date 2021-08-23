@@ -5,7 +5,7 @@ var camera = {
     x: 1,
     y: 7
 }
-   var br = 0, jumps = 2
+   var br = 0, jumps = 2, gravity = 800
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -43,6 +43,7 @@ class Scene extends Phaser.Scene {
         this.objects2 = []
 
         //adding background image
+        
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
         //scaling background
         this.bg.scaleX = window.innerWidth / 1000;
@@ -117,12 +118,12 @@ class Scene extends Phaser.Scene {
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
-                this.player.setVelocity(0, -600)
+                this.player.setVelocity(0, -gravity)
                 jumps--;
                 return;
             } //asd
             if ( jumps > 0 ) {
-                this.player.setVelocity(0, -600)
+                this.player.setVelocity(0, -gravity)
                 jumps--;
             }
         })
