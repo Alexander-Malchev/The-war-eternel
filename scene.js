@@ -16,7 +16,11 @@ class Scene extends Phaser.Scene {
     }
     preload () {
         // this.load.spritesheet("player", "assets/pl.png", { frameWidth: 875 / 5, frameHeight: 202 })
-        this.load.spritesheet("player", "assets/player-sheet.png", { frameWidth: 732 / 6, frameHeight: 360 / 2 })
+        // this.load.spritesheet("player", "assets/player-sheet.png", { frameWidth: 732 / 6, frameHeight: 360 / 2 })
+        this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
+        this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
+        this.load.image("health", "assets/bar.png")
+        this.load.image("ammo", "assets/ammo.png")
         this.load.image("p0", "assets/platform[0].png")
         this.load.image("p1", "assets/platform[1].png")
         this.load.image("p2", "assets/platform[2].png")
@@ -25,6 +29,12 @@ class Scene extends Phaser.Scene {
         this.load.image("p5", "assets/platform[5].png")
         this.load.image("p6", "assets/platform[6].png")
         this.load.image("bg", "assets/bg.png")
+        this.load.image("pistol", "assets/handgun.png")
+        this.load.image("ar", "assets/ar.png")
+        this.load.image("lmg", "assets/lmg.png")
+        this.load.image("shotgun", "assets/shotgun.png")
+        this.load.image("sniper", "assets/sniper.png")
+        this.load.image("smg", "assets/smg.png")
 
     }
     create () {
@@ -38,24 +48,47 @@ class Scene extends Phaser.Scene {
         this.bg.scaleX = window.innerWidth / 1000;
         this.bg.scaleY = window.innerHeight / 527;
 
-        var config = {
+        var configPistol = {
+            key: 'Pistol',
+            frames: this.anims.generateFrameNumbers('player-pistol', { start: 0, end: 4, first: 0 }),
+            frameRate: 20,
+            repeat: -1
+        };
+        var configPl = {
             key: 'Soudier',
-            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4, first: 0 }),
+            frames: this.anims.generateFrameNumbers('player-pistol', { start: 0, end: 4, first: 0 }),
             frameRate: 20,
             repeat: -1
         };
     
-        this.anims.create(config);
-    
-        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player').play('Soudier').setScale(0.4); //animated player
+        this.anims.create(configPistol);
+        this.anims.create(configPl);
+
+        this.bullets = []
+        this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
+        this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
+        this.player.gun = this.gun;
+        this.gun = undefined;
+        this.player.gun.type = "pistol"
+        this.player.gun.shoot = () => {
+            this.bullets.push({ammo: this.add.image(this.player.gun.x, this.player.gun.y, 'ammo'), delta: 1})
+        }
         this.player.setGravityY(600)
+        this.player.health = {
+            img: this.add.image(10, 10, "health"),
+            health: 100
+        }
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
-            e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) //key E
+            e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E), //key E
+            r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R) //key R
         }
         // this.cameras.main.startFollow(this.player);
-        this.objects.push( this.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 50, `p6`)); //adding platform bottom
-        this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, 130, `p6`)); //adding platform top
+        this.objects.push( this.physics.add.image (0 + 1446 / 2, window.innerHeight - 10, `p6`)); //adding platform bottom
+        // this.objects[0].scaleX = 2;
+        this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
+        this.objects[this.objects.length -1].body.pushable = false
+        this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, -100, `p6`)); //adding platform outside the screen
 
         // this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
@@ -65,6 +98,22 @@ class Scene extends Phaser.Scene {
     update (delta) {
         br++; //counting frames
 
+        switch(this.player.gun.type) {
+            case "pistol":
+                this.key.r.on("up", (e) => {
+                    this.player.gun.shoot()
+                })
+                break;
+            case "lmg":
+                break;
+        }
+
+        for ( let n = 0; n < this.bullets.length; n++ ) {
+            this.bullets[n].ammo.x += this.bullets[n].delta;
+        }
+        this.player.gun.y = this.player.y - 35;
+        this.player.gun.x = this.player.x + 11;
+        this.player.health.img.width = this.player.health.health
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
@@ -77,6 +126,7 @@ class Scene extends Phaser.Scene {
                 jumps--;
             }
         })
+        
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
             var image = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
@@ -96,7 +146,7 @@ class Scene extends Phaser.Scene {
 
         }
 
-        if (br % 130 == 0 ) { //on every 130 updates
+        if (br % 200 == 0 ) { //on every 130 updates
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
