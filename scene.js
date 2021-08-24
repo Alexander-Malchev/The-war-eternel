@@ -68,6 +68,14 @@ class Scene extends Phaser.Scene {
 
         this.physics.add.sprite(100, 100, 'enemy').play('Enemy')
 
+        this.clips = {
+            "pistol": 8,
+            "shotgun": 7,
+            "sniper": 10,
+            "ar": 30,
+            "smg": 40,
+            "lmg": 100
+        }
         this.bullets = []
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
