@@ -74,6 +74,7 @@ class Scene extends Phaser.Scene {
         this.player.gun = this.gun;
         this.player.gun.name = "pistol"
         this.gun = undefined;
+        this.player.gun.ammo = 8;
         this.player.setGravityY(600)
         this.player.health = {
             img: this.add.image(10, 10, "health"),
@@ -133,60 +134,31 @@ class Scene extends Phaser.Scene {
             //size
             runChildUpdate: true
         })
-
+        this.key.r.on("up", () => {
+            if ( ["pistol", "sniper", "shotgun"].indexOf(this.player.gun.name) != -1) {            
+                var bullet = bullets.get();
+                if (bullet){
+                    if ( this.player.gun.ammo > 0 ) {
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                        this.player.gun.ammo--;
+                    }
+                }
+            }
+        }, this)
+        this.key.r.on("down", () => {
+            if ( ["smg", "ar", "lmg"].indexOf(this.player.gun.name) != -1) {            
+                var bullet = bullets.get();
+                if (bullet){
+                    if ( this.player.gun.ammo > 0 ) {
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                        this.player.gun.ammo--;
+                    }
+                }
+            }
+        }, this)
     }
     update (delta) {
         br++; //counting frames
-        switch ( this.player.gun.name ) {
-            case "pistol":
-                this.key.r.on("up", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-            case "smg":
-                this.key.r.on("down", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-            case "lmg":
-                this.key.r.on("down", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-            case "shotgun":
-                this.key.r.on("up", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-            case "sniper":
-                this.key.r.on("up", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-            case "ar":
-                this.key.r.on("down", () => {
-                    var bullet = bullets.get();
-                    if (bullet){
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                    }
-                })
-                break;
-        }
         this.player.gun.y = this.player.y - 35;
         this.player.gun.x = this.player.x + 11;
         this.player.health.img.width = this.player.health.health
