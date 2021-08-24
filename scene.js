@@ -1,11 +1,4 @@
-var camera = {
-    x: 0, 
-    y: 0
-}, delta = {
-    x: 1,
-    y: 7
-}
-   var br = 0, jumps = 2, gravity = 800
+var br = 0, jumps = 2
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -17,8 +10,7 @@ class Scene extends Phaser.Scene {
     preload () {
         // this.load.spritesheet("player", "assets/pl.png", { frameWidth: 875 / 5, frameHeight: 202 })
         // this.load.spritesheet("player", "assets/player-sheet.png", { frameWidth: 732 / 6, frameHeight: 360 / 2 })
-        this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
-        this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
+        this.load.spritesheet("enemy", "assets/enemy.png", { frameWidth: 91, frameHeight: 158 })
         this.load.image("health", "assets/bar.png")
         this.load.image("ammo", "assets/ammo.png")
         this.load.image("p0", "assets/platform[0].png")
@@ -35,7 +27,8 @@ class Scene extends Phaser.Scene {
         this.load.image("shotgun", "assets/shotgun.png")
         this.load.image("sniper", "assets/sniper.png")
         this.load.image("smg", "assets/smg.png")
-
+        this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
+        this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
     }
     create () {
         //objects
@@ -43,7 +36,6 @@ class Scene extends Phaser.Scene {
         this.objects2 = []
 
         //adding background image
-        
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
         //scaling background
         this.bg.scaleX = window.innerWidth / 1000;
@@ -56,24 +48,30 @@ class Scene extends Phaser.Scene {
             repeat: -1
         };
         var configPl = {
-            key: 'Soudier',
+            key: 'Soldier',
             frames: this.anims.generateFrameNumbers('player-pistol', { start: 0, end: 4, first: 0 }),
+            frameRate: 20,
+            repeat: -1
+        };
+
+        var configEn = {
+            key: 'Enemy',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 4, first: 0 }),
             frameRate: 20,
             repeat: -1
         };
     
         this.anims.create(configPistol);
         this.anims.create(configPl);
+        this.anims.create(configEn);
+
+        this.physics.add.sprite(100, 100, 'enemy').play('Enemy')
 
         this.bullets = []
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
         this.player.gun = this.gun;
         this.gun = undefined;
-        this.player.gun.type = "pistol"
-        this.player.gun.shoot = () => {
-            this.bullets.push({ammo: this.add.image(this.player.gun.x, this.player.gun.y, 'ammo'), delta: 1})
-        }
         this.player.setGravityY(600)
         this.player.health = {
             img: this.add.image(10, 10, "health"),
@@ -99,31 +97,18 @@ class Scene extends Phaser.Scene {
     update (delta) {
         br++; //counting frames
 
-        switch(this.player.gun.type) {
-            case "pistol":
-                this.key.r.on("up", (e) => {
-                    this.player.gun.shoot()
-                })
-                break;
-            case "lmg":
-                break;
-        }
-
-        for ( let n = 0; n < this.bullets.length; n++ ) {
-            this.bullets[n].ammo.x += this.bullets[n].delta;
-        }
         this.player.gun.y = this.player.y - 35;
         this.player.gun.x = this.player.x + 11;
         this.player.health.img.width = this.player.health.health
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
-                this.player.setVelocity(0, -gravity)
+                this.player.setVelocity(0, -600)
                 jumps--;
                 return;
             } //asd
             if ( jumps > 0 ) {
-                this.player.setVelocity(0, -gravity)
+                this.player.setVelocity(0, -600)
                 jumps--;
             }
         })
