@@ -35,6 +35,7 @@ class Scene extends Phaser.Scene {
         //objects
         this.objects = []
         this.objects2 = []
+        this.weapons = []
 
         //adding background image
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
@@ -191,6 +192,10 @@ class Scene extends Phaser.Scene {
             this.objects.push( image );
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
+            const weap = ['pistol', 'shotgun']
+            this.weapons.push(this.physics.add.image(random(this.objects[this.objects.length - 1].x - this.objects[this.objects.length - 1].width / 2, 
+                this.objects[this.objects.length - 1].x + this.objects[this.objects.length - 1].width / 2 ), 
+                this.objects[this.objects.length - 1].y - 50, weap[random(0, weap.length)]).setScale(0.05))
 
             //spawning platform from top
             var image2 = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
@@ -199,6 +204,9 @@ class Scene extends Phaser.Scene {
             this.objects2.push( image2 );
             this.physics.add.collider(this.player, this.objects2[this.objects2.length - 1]);
             this.objects2[this.objects2.length -1].body.pushable = false
+            this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
+                this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
+                this.objects2[this.objects2.length - 1].y - 50, weap[random(0, weap.length)]).setScale(0.05))
 
         }
 
@@ -208,7 +216,15 @@ class Scene extends Phaser.Scene {
             this.objects[this.objects.length -1].body.pushable = false
 
         }
-
+        for(let i = 0; i < this.weapons.length; i++ ){
+            if(this.weapons[i].x + this.weapons[i].width <= 0){
+                this.weapons[i].destroy(); //removing image
+                this.weapons[i] = this.weapons[this.weapons.length - 1]; //replacing platform data with last platform's data
+                this.weapons.pop()// removing the last platform becouse is duplicated
+                continue;            
+            }
+            this.weapons[i].x -= 7;
+        }
         for ( let i = 0; i < this.objects.length; i++ ) { //looping all platforms from bottom
             if ( this.objects[i].x + this.objects[i].width <= 0 ) { //if platform is out of screen
                 this.objects[i].destroy(); //removing image
