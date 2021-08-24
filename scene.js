@@ -186,19 +186,29 @@ class Scene extends Phaser.Scene {
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
+            const weap = [['pistol', 0.05], ['shotgun', 0.2]]
+            const weap2 = [['ar', 0.2]]
+            const weap3 = [['sniper', 0.2]]
+            const chosen = weap[random(0, weap.length)]
+            const chosen2 = weap2[0]
+            const chosen3 = weap3[0]
+            var chance = random(1, 100);
+            var chance2 = random(1, 100);
+         
+            
+
             var image = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y = this.objects[this.objects.length - 1].y + random (-100, 100)
             image.x = window.innerWidth + image.width;
             image.y = y > window.innerHeight / 2 + 50 && y < window.innerHeight - 200 ? y : window.innerHeight - 200
             this.objects.push( image );
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
-            const weap = [['pistol', 0.05], ['shotgun', 0.2]]
-            const chosen = weap[random(0, weap.length)]
-            const chosen2 = weap[random(0, weap.length)]
-            this.weapons.push(this.physics.add.image(random(this.objects[this.objects.length - 1].x - this.objects[this.objects.length - 1].width / 2, 
-                this.objects[this.objects.length - 1].x + this.objects[this.objects.length - 1].width / 2 ), 
-                this.objects[this.objects.length - 1].y - 50, chosen[0]).setScale(chosen[1]))
 
+           if(chance < 40){
+            this.weapons.push(this.physics.add.image(random(this.objects[this.objects.length - 1].x - this.objects[this.objects.length - 1].width / 2, 
+            this.objects[this.objects.length - 1].x + this.objects[this.objects.length - 1].width / 2 ), 
+            this.objects[this.objects.length - 1].y - 50, chosen[0]).setScale(chosen[1]))
+           }
             //spawning platform from top
             var image2 = this.physics.add.image(100000000, 0, "p" + random(1, 5)), y2 = this.objects2[this.objects2.length - 1].y + random (-100, 100)
             image2.x = window.innerWidth + image2.width;
@@ -206,9 +216,21 @@ class Scene extends Phaser.Scene {
             this.objects2.push( image2 );
             this.physics.add.collider(this.player, this.objects2[this.objects2.length - 1]);
             this.objects2[this.objects2.length -1].body.pushable = false
-            this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
+
+           
+            if (chance2 < 20 ){
+                this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen2[0]).setScale(chosen2[1]))
+            } else if (chance2 > 20 && chance2 < 60){
+                this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
+                this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
+                this.objects2[this.objects2.length - 1].y - 50, chosen[0]).setScale(chosen[1]))
+            } else if (chance2 > 60 && chance2 < 70){
+                this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
+                this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
+                this.objects2[this.objects2.length - 1].y - 50, chosen3[0]).setScale(chosen3[1]))
+                }
 
         }
 
