@@ -3,6 +3,10 @@ function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
 
+function dis (ob1, ob2) {
+    return Math.sqrt( (ob1.x - ob2.x) * (ob1.x - ob2.x) + (ob1.y - ob2.y) * (ob1.y - ob2.y) )
+}
+
 class Scene extends Phaser.Scene {
     constructor() {
         super ({key: "Scene"})
@@ -76,6 +80,14 @@ class Scene extends Phaser.Scene {
             "ar": 30,
             "smg": 40,
             "lmg": 100
+        }
+        this.scales = {
+            "pistol": 0.05,
+            "shotgun": 0.2,
+            "sniper": 0.2,
+            "ar": 0.2,
+            "smg": 0.2,
+            "lmg": 0.2
         }
         this.bullets = []
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
@@ -152,6 +164,17 @@ class Scene extends Phaser.Scene {
                         this.player.gun.ammo--;
                     }
                 }
+            }
+        }, this)
+        this.key.e.on("up", () => {
+            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 )
+            if ( near.length > 0 ) {            
+                near = near.sort( (a, b) => a.y - b.y )
+                this.player.gun.destroy()
+                this.player.gun = this.add.image(this.player.gun.x, this.player.gun.y, near[0].texture.key).setScale(this.scales[near[0].texture.key])
+                this.player.gun.name = near[0].texture.key;
+                this.player.gun.ammo = this.clips[this.player.gun.name]
+                near[0].destroy()
             }
         }, this)
         this.key.r.on("down", () => {
