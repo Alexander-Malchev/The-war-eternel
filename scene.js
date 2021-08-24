@@ -1,4 +1,4 @@
-var br = 0, jumps = 2
+var br = 0, jumps = 2, bullets
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -30,6 +30,7 @@ class Scene extends Phaser.Scene {
         this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
         this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
     }
+    
     create () {
         //objects
         this.objects = []
@@ -71,6 +72,7 @@ class Scene extends Phaser.Scene {
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
         this.player.gun = this.gun;
+        this.player.gun.name = "pistol"
         this.gun = undefined;
         this.player.setGravityY(600)
         this.player.health = {
@@ -93,10 +95,98 @@ class Scene extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
         this.player.body.pushable = true;
 
+        var Bullet = new Phaser.Class({
+
+            Extends: Phaser.GameObjects.Image,
+    
+            initialize:
+    
+            function Bullet (scene)
+            {
+                Phaser.GameObjects.Image.call(this, scene, 0, 0, 'ammo');
+                this.setScale(0.25)
+                this.speed = Phaser.Math.GetSpeed(400, 1);
+            },
+    
+            shoot: function (x, y)
+            {
+                this.setPosition(x, y);
+    
+                this.setActive(true);
+                this.setVisible(true);
+            },
+    
+            update: function (time, delta)
+            {
+                this.x += this.speed * delta;
+    
+                if (this.x + this.width / 2 > window.innerWidth)
+                {
+                    this.setActive(false);
+                    this.setVisible(false);
+                }
+            }
+    
+        });
+        bullets = this.add.group({
+            classType: Bullet,
+            //size
+            runChildUpdate: true
+        })
+
     }
     update (delta) {
         br++; //counting frames
-
+        switch ( this.player.gun.name ) {
+            case "pistol":
+                this.key.r.on("up", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+            case "smg":
+                this.key.r.on("down", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+            case "lmg":
+                this.key.r.on("down", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+            case "shotgun":
+                this.key.r.on("up", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+            case "sniper":
+                this.key.r.on("up", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+            case "ar":
+                this.key.r.on("down", () => {
+                    var bullet = bullets.get();
+                    if (bullet){
+                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                    }
+                })
+                break;
+        }
         this.player.gun.y = this.player.y - 35;
         this.player.gun.x = this.player.x + 11;
         this.player.health.img.width = this.player.health.health
@@ -157,7 +247,9 @@ class Scene extends Phaser.Scene {
             }
             this.objects2[i].x -= 7; //moving platform
         } 
+       
     }
+
 }
 
 const config = { //phaser stuff
