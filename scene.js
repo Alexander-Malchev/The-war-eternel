@@ -55,7 +55,7 @@ class Scene extends Phaser.Scene {
         };
         var configPl = {
             key: 'Soldier',
-            frames: this.anims.generateFrameNumbers('player-pistol', { start: 0, end: 4, first: 0 }),
+            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 4, first: 0 }),
             frameRate: 20,
             repeat: -1
         };
@@ -167,25 +167,22 @@ class Scene extends Phaser.Scene {
             }
         }, this)
         this.key.e.on("up", () => {
-            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 )
+            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y <= this.player.y + this.player.height / 2 )
             if ( near.length > 0 ) {            
                 near = near.sort( (a, b) => a.y - b.y )
                 this.player.gun.destroy()
-                this.player.gun = this.add.image(this.player.gun.x, this.player.gun.y, near[0].texture.key).setScale(this.scales[near[0].texture.key])
+                const gun = this.add.image(this.player.gun.x, this.player.gun.y, near[0].texture.key).setScale(this.scales[near[0].texture.key])
+                if ( near[0].texture.key != "pistol" && near[0].texture.key != "smg" ) {
+                    this.player.setTexture("player")
+                    this.player.play("Soldier")
+                } else {
+                    this.player.setTexture("player-pistol")
+                    this.player.play("Pistol")
+                }
+                this.player.gun = gun
                 this.player.gun.name = near[0].texture.key;
                 this.player.gun.ammo = this.clips[this.player.gun.name]
                 near[0].destroy()
-            }
-        }, this)
-        this.key.r.on("down", () => {
-            if ( ["smg", "ar", "lmg"].indexOf(this.player.gun.name) != -1) {            
-                var bullet = bullets.get();
-                if (bullet){
-                    if ( this.player.gun.ammo > 0 ) {
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                        this.player.gun.ammo--;
-                    }
-                }
             }
         }, this)
     }
@@ -206,6 +203,18 @@ class Scene extends Phaser.Scene {
                 jumps--;
             }
         })
+
+        if (this.key.r.isDown) {
+            if ( ["smg", "ar", "lmg"].indexOf(this.player.gun.name) != -1) {            
+                var bullet = bullets.get();
+                if (bullet){
+                    if ( this.player.gun.ammo > 0 ) {
+                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 100);
+                        this.player.gun.ammo--;
+                    }
+                }
+            }
+        }
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
@@ -304,7 +313,7 @@ const config = { //phaser stuff
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         }, 
         gravity: {y: 200}
     },
