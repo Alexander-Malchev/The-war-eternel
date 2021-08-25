@@ -91,7 +91,6 @@ class Scene extends Phaser.Scene {
             "smg": 0.2,
             "lmg": 0.2
         }
-        
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
         this.player.gun = this.gun;
@@ -287,7 +286,6 @@ class Scene extends Phaser.Scene {
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
-            const chanceEnemy1 = random ( 1, 100) > 70;
             const chanceEnemy2 = random ( 1, 100) > 70;
             var chance = random(1, 100);
             var chance2 = random(1, 100);
@@ -300,19 +298,6 @@ class Scene extends Phaser.Scene {
             this.objects.push( image );
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
-            
-            if (chanceEnemy1) {
-                const c = weapE[random(0, weapE.length)]
-                this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
-                this.enemy[this.enemy.length - 1].gun = this.add.image(this.enemy[this.enemy.length - 1].x, this.enemy[this.enemy.length - 1].y, c[0]).setScale(c[1])
-                this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
-                this.enemy[this.enemy.length - 1].setGravityY(600)
-                this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
-                this.enemy[this.enemy.length - 1].health = {
-                    img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
-                    health: 100
-                }
-            }
 
            if(chance < 40){
             this.weapons.push(this.physics.add.image(random(this.objects[this.objects.length - 1].x - this.objects[this.objects.length - 1].width / 2, 
@@ -326,6 +311,29 @@ class Scene extends Phaser.Scene {
             this.objects2.push( image2 );
             this.physics.add.collider(this.player, this.objects2[this.objects2.length - 1]);
             this.objects2[this.objects2.length -1].body.pushable = false
+            if (chanceEnemy2) {
+                const c = weapE[random(0, weapE.length)]
+                this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
+                this.enemy[this.enemy.length - 1].gun = this.add.image(this.enemy[this.enemy.length - 1].x, this.enemy[this.enemy.length - 1].y, c[0]).setScale(c[1])
+                this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
+                this.enemy[this.enemy.length - 1].setGravityY(600)
+                this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
+                this.enemy[this.enemy.length - 1].health = {
+                    img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
+                    health: 100
+                }
+                
+                for ( let n = 0; n < this.objects.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[n]);
+                }
+                for ( let n = 0; n < this.objects2.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
+                }
+                for ( let i = 0; i < this.enemy.length; i++) {
+                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                }
+            }
 
            
             if (chance2 < 20){
@@ -345,10 +353,33 @@ class Scene extends Phaser.Scene {
         }
 
         if (br % 200 == 0 ) { //on every 130 updates
+            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['pistol', 0.05], ['shotgun', 0.2] ]
+            const chance = random(1, 100) > 70
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
-
+            if (chance) {
+                const c = weapE[random(0, weapE.length)]
+                this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
+                this.enemy[this.enemy.length - 1].gun = this.add.image(this.enemy[this.enemy.length - 1].x, this.enemy[this.enemy.length - 1].y, c[0]).setScale(c[1])
+                this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
+                this.enemy[this.enemy.length - 1].setGravityY(600)
+                this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
+                this.enemy[this.enemy.length - 1].health = {
+                    img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
+                    health: 100
+                }
+                for ( let n = 0; n < this.objects.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[n]);
+                }
+                for ( let n = 0; n < this.objects2.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
+                }
+                for ( let i = 0; i < this.enemy.length; i++) {
+                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                }
+            }
         }
         for(let i = 0; i < this.weapons.length; i++ ){
             if(this.weapons[i].x + this.weapons[i].width <= 0){
@@ -377,7 +408,45 @@ class Scene extends Phaser.Scene {
             }
             this.objects2[i].x -= 7; //moving platform
         } 
-       
+        
+        for ( let i = 0; i < this.enemy.length; i++ ) { //looping all platforms from top
+            if ( this.enemy[i].x + this.enemy[i].width <= 0 ) { //if platform is out of screen
+                this.enemy[i].gun.destroy();
+                this.enemy[i].health.img.destroy();
+                this.enemy[i].destroy(); //removing image 
+                this.enemy[i] = this.enemy[this.enemy.length - 1]; //removing image
+                this.enemy.pop() //removing the last platform becouse is duplicated
+                continue; //skiping movement 
+            }
+
+            switch ( this.enemy[i].gun.name ) {
+                case "pistol":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+                case "shotgun":
+                    this.enemy[i].gun.y = this.enemy[i].y - 30;
+                    this.enemy[i].gun.x = this.enemy[i].x - 35;    
+                    break;
+                case "sniper":
+                    this.enemy[i].gun.y = this.enemy[i].y - 33;
+                    this.enemy[i].gun.x = this.enemy[i].x - 26;    
+                    break;
+                case "ar":
+                    this.enemy[i].gun.y = this.enemy[i].y - 32;
+                    this.enemy[i].gun.x = this.enemy[i].x - 24;    
+                    break;
+                case "smg":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+                case "lmg":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+            }
+            this.enemy[i].x -= 10; //moving platform
+        }
     }
 
 }
