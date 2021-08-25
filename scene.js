@@ -71,7 +71,7 @@ class Scene extends Phaser.Scene {
         this.anims.create(configPl);
         this.anims.create(configEn);
 
-        this.physics.add.sprite(100, 100, 'enemy').play('Enemy')
+        // this.physics.add.sprite(100, 100, 'enemy').play('Enemy')
 
         this.clips = {
             "pistol": 8,
@@ -98,7 +98,7 @@ class Scene extends Phaser.Scene {
         this.player.gun.ammo = 8;
         this.player.setGravityY(600)
         this.player.health = {
-            img: this.add.image(10, 10, "health"),
+            img: this.add.image(60, 10, "health"),
             health: 100
         }
         this.key = {
@@ -185,11 +185,39 @@ class Scene extends Phaser.Scene {
                 near[0].destroy()
             }
         }, this)
+        this.ammo = this.add.text(10, 30, "Ammo " + this.player.gun.ammo, {
+            font: "20px monospace", 
+            fill: "orange"
+        })
     }
     update (delta) {
         br++; //counting frames
-        this.player.gun.y = this.player.y - 35;
-        this.player.gun.x = this.player.x + 11;
+        switch ( this.player.gun.name ) {
+            case "pistol":
+                this.player.gun.y = this.player.y - 35;
+                this.player.gun.x = this.player.x + 11;    
+                break;
+            case "shotgun":
+                this.player.gun.y = this.player.y - 30;
+                this.player.gun.x = this.player.x + 35;    
+                break;
+            case "sniper":
+                this.player.gun.y = this.player.y - 35;
+                this.player.gun.x = this.player.x + 11;    
+                break;
+            case "ar":
+                this.player.gun.y = this.player.y - 35;
+                this.player.gun.x = this.player.x + 11;    
+                break;
+            case "smg":
+                this.player.gun.y = this.player.y - 35;
+                this.player.gun.x = this.player.x + 11;    
+                break;
+            case "lmg":
+                this.player.gun.y = this.player.y - 35;
+                this.player.gun.x = this.player.x + 11;    
+                break;
+        }
         this.player.health.img.width = this.player.health.health
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
@@ -209,12 +237,13 @@ class Scene extends Phaser.Scene {
                 var bullet = bullets.get();
                 if (bullet){
                     if ( this.player.gun.ammo > 0 ) {
-                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 100);
+                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 500);
                         this.player.gun.ammo--;
                     }
                 }
             }
         }
+        this.ammo.text = "Ammo " + this.player.gun.ammo
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
@@ -258,7 +287,7 @@ class Scene extends Phaser.Scene {
                 this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen[0]).setScale(chosen[1]))
-            } else if (chance2 > 60 && chance2 < 70){
+            } else if (chance2 > 60 && chance2 < 62){
                 this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen3[0]).setScale(chosen3[1]))
