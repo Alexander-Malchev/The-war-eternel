@@ -323,6 +323,12 @@ class Scene extends Phaser.Scene {
                     health: 100
                 }
                 
+                for ( let n = 0; n < this.objects.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[n]);
+                }
+                for ( let n = 0; n < this.objects2.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
+                }
                 for ( let i = 0; i < this.enemy.length; i++) {
                     this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
                     this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
@@ -362,6 +368,12 @@ class Scene extends Phaser.Scene {
                 this.enemy[this.enemy.length - 1].health = {
                     img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
                     health: 100
+                }
+                for ( let n = 0; n < this.objects.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[n]);
+                }
+                for ( let n = 0; n < this.objects2.length - 1; n++ ) {
+                    this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
                 }
                 for ( let i = 0; i < this.enemy.length; i++) {
                     this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
