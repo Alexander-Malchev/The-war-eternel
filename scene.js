@@ -286,7 +286,7 @@ class Scene extends Phaser.Scene {
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
-            const chanceEnemy2 = random ( 1, 100) > 70;
+            const chanceEnemy2 = random ( 1, 100) > 50;
             var chance = random(1, 100);
             var chance2 = random(1, 100);
          
@@ -316,6 +316,7 @@ class Scene extends Phaser.Scene {
                 this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
                 this.enemy[this.enemy.length - 1].gun = this.add.image(this.enemy[this.enemy.length - 1].x, this.enemy[this.enemy.length - 1].y, c[0]).setScale(c[1])
                 this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
+                this.enemy[this.enemy.length - 1].gun.name = c[0]
                 this.enemy[this.enemy.length - 1].setGravityY(600)
                 this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
                 this.enemy[this.enemy.length - 1].health = {
@@ -354,7 +355,7 @@ class Scene extends Phaser.Scene {
 
         if (br % 200 == 0 ) { //on every 130 updates
             const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['pistol', 0.05], ['shotgun', 0.2] ]
-            const chance = random(1, 100) > 70
+            const chance = random(1, 100) > 50
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
@@ -365,6 +366,7 @@ class Scene extends Phaser.Scene {
                 this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
                 this.enemy[this.enemy.length - 1].setGravityY(600)
                 this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
+                this.enemy[this.enemy.length - 1].gun.name = c[0]
                 this.enemy[this.enemy.length - 1].health = {
                     img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
                     health: 100
@@ -418,6 +420,10 @@ class Scene extends Phaser.Scene {
                 this.enemy.pop() //removing the last platform becouse is duplicated
                 continue; //skiping movement 
             }
+
+            this.enemy[i].health.img.x = this.enemy[i].x; 
+            this.enemy[i].health.img.y = this.enemy[i].y - this.enemy[i].height / 2; 
+            this.enemy[i].health.img.width = this.enemy[i].health.health;
 
             switch ( this.enemy[i].gun.name ) {
                 case "pistol":
