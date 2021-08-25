@@ -329,10 +329,10 @@ class Scene extends Phaser.Scene {
                 for ( let n = 0; n < this.objects2.length - 1; n++ ) {
                     this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
                 }
-                for ( let i = 0; i < this.enemy.length; i++) {
-                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
-                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
-                }
+            }
+            for ( let i = 0; i < this.enemy.length; i++) {
+                this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
             }
 
            
@@ -375,10 +375,10 @@ class Scene extends Phaser.Scene {
                 for ( let n = 0; n < this.objects2.length - 1; n++ ) {
                     this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
                 }
-                for ( let i = 0; i < this.enemy.length; i++) {
-                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
-                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
-                }
+            }
+            for ( let i = 0; i < this.enemy.length; i++) {
+                this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
             }
         }
         for(let i = 0; i < this.weapons.length; i++ ){
