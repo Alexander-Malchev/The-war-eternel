@@ -107,10 +107,13 @@ class Scene extends Phaser.Scene {
             r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R) //key R
         }
         // this.cameras.main.startFollow(this.player);
-        this.objects.push( this.physics.add.image (0 + 1446 / 2, window.innerHeight - 10, `p6`)); //adding platform bottom
+        
+        for ( let n = 0; n < 5; n ++ ) {
+            this.objects.push( this.physics.add.image (0 + 1446 / 2 + n * (1446 / 2), window.innerHeight - 10, `p6`)); //adding platform bottom
+            this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
+            this.objects[this.objects.length -1].body.pushable = false
+        }
         // this.objects[0].scaleX = 2;
-        this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
-        this.objects[this.objects.length -1].body.pushable = false
         this.objects2.push( this.add.image (window.innerWidth + 1446 / 2, -100, `p6`)); //adding platform outside the screen
 
         // this.player.setBounce(0.2);
@@ -167,7 +170,7 @@ class Scene extends Phaser.Scene {
             }
         }, this)
         this.key.e.on("up", () => {
-            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y <= this.player.y + this.player.height / 2 )
+            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y >= this.player.y )
             if ( near.length > 0 ) {            
                 near = near.sort( (a, b) => a.y - b.y )
                 this.player.gun.destroy()
@@ -218,6 +221,7 @@ class Scene extends Phaser.Scene {
                 this.player.gun.x = this.player.x + 11;    
                 break;
         }
+        this.player.depth = 1000000;
         this.player.health.img.width = this.player.health.health
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
