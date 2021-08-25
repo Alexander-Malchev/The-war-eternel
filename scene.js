@@ -322,8 +322,11 @@ class Scene extends Phaser.Scene {
                     img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
                     health: 100
                 }
-                this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[this.objects2.length - 1]);
-                this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[this.objects.length - 1]);
+                
+                for ( let i = 0; i < this.enemy.length; i++) {
+                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                }
             }
 
            
@@ -360,8 +363,10 @@ class Scene extends Phaser.Scene {
                     img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
                     health: 100
                 }
-                this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[this.objects2.length - 1]);
-                this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects[this.objects.length - 1]);
+                for ( let i = 0; i < this.enemy.length; i++) {
+                    this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
+                    this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                }
             }
         }
         for(let i = 0; i < this.weapons.length; i++ ){
