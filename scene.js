@@ -40,6 +40,8 @@ class Scene extends Phaser.Scene {
         this.objects = []
         this.objects2 = []
         this.weapons = []
+        this.enemy = []
+        this.bullets = []
 
         //adding background image
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
@@ -89,8 +91,7 @@ class Scene extends Phaser.Scene {
             "smg": 0.2,
             "lmg": 0.2
         }
-        this.enemy = []
-        this.bullets = []
+        
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
         this.player.gun = this.gun;
@@ -299,6 +300,7 @@ class Scene extends Phaser.Scene {
             this.objects.push( image );
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
+            
             if (chanceEnemy1) {
                 const c = weapE[random(0, weapE.length)]
                 this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
