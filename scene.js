@@ -130,17 +130,21 @@ class Scene extends Phaser.Scene {
                 this.speed = Phaser.Math.GetSpeed(400, 1);
             },
     
-            shoot: function (x, y)
+            shoot: function (x, y, ang)
             {
                 this.setPosition(x, y);
-    
+                this.ang = ang;
                 this.setActive(true);
                 this.setVisible(true);
             },
     
             update: function (time, delta)
             {
-                this.x += this.speed * delta;
+                if(this.ang){
+                    this.x = Math.sin(this.ang)
+                }else
+                {this.x += this.speed * delta;}
+
     
                 if (this.x + this.width / 2 > window.innerWidth)
                 {
@@ -157,17 +161,40 @@ class Scene extends Phaser.Scene {
         })
         this.key.r.on("up", () => {
             if ( ["pistol", "sniper", "shotgun"].indexOf(this.player.gun.name) != -1) {            
-                var bullet = bullets.get();
-                if (bullet){
-                    if ( this.player.gun.ammo > 0 ) {
-                        bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                        this.player.gun.ammo--;
-                    }
+                switch ( this.player.gun.name ) {
+                    case "pistol":
+                        var bullet = bullets.get();
+                        if (bullet){
+                            if ( this.player.gun.ammo > 0 ) {
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                                this.player.gun.ammo--;
+                            }
+                        }    
+                        break;
+                    case "shotgun":
+                        var bullet = bullets.get();
+                        if (bullet){
+                            if ( this.player.gun.ammo > 0 ) {
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                                this.player.gun.ammo--;
+                            }
+                        }  
+                        break;
+                    case "sniper":
+                        var bullet = bullets.get();
+                        if (bullet){
+                            if ( this.player.gun.ammo > 0 ) {
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                                this.player.gun.ammo--;
+                            }
+                        }
+                        break;
+                   
                 }
             }
         }, this)
         this.key.e.on("up", () => {
-            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y <= this.player.y + this.player.height / 2 )
+            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y >= this.player.y)
             if ( near.length > 0 ) {            
                 near = near.sort( (a, b) => a.y - b.y )
                 this.player.gun.destroy()
