@@ -89,6 +89,7 @@ class Scene extends Phaser.Scene {
             "smg": 0.2,
             "lmg": 0.2
         }
+        this.enemy = []
         this.bullets = []
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
@@ -279,9 +280,12 @@ class Scene extends Phaser.Scene {
             const weap = [['pistol', 0.05], ['shotgun', 0.2]]
             const weap2 = [['ar', 0.2]]
             const weap3 = [['sniper', 0.2]]
+            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['pistol', 0.05], ['shotgun', 0.2] ]
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
+            const chanceEnemy1 = random ( 1, 100) > 70;
+            const chanceEnemy2 = random ( 1, 100) > 70;
             var chance = random(1, 100);
             var chance2 = random(1, 100);
          
@@ -293,6 +297,18 @@ class Scene extends Phaser.Scene {
             this.objects.push( image );
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
+            if (chanceEnemy1) {
+                const c = weapE[random(0, weapE.length)]
+                this.enemy.push(this.physics.add.sprite(this.objects[this.objects.length - 1].x, this.objects[this.objects.length - 1].y - 50, 'enemy').play('Enemy').setScale(0.7))
+                this.enemy[this.enemy.length - 1].gun = this.add.image(this.enemy[this.enemy.length - 1].x, this.enemy[this.enemy.length - 1].y, c[0]).setScale(c[1])
+                this.enemy[this.enemy.length - 1].gun.scaleX = -this.enemy[this.enemy.length - 1].gun.scaleX
+                this.enemy[this.enemy.length - 1].setGravityY(600)
+                this.enemy[this.enemy.length - 1].gun.ammo = this.clips[c[0]]
+                this.enemy[this.enemy.length - 1].health = {
+                    img: this.add.image(this.enemy[this.enemy.length - 1].x - 50, this.enemy[this.enemy.length - 1].y - 100, "health"),
+                    health: 100
+                }
+            }
 
            if(chance < 40){
             this.weapons.push(this.physics.add.image(random(this.objects[this.objects.length - 1].x - this.objects[this.objects.length - 1].width / 2, 
