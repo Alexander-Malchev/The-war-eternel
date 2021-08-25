@@ -84,7 +84,7 @@ class Scene extends Phaser.Scene {
         this.scales = {
             "pistol": 0.05,
             "shotgun": 0.2,
-            "sniper": 0.2,
+            "sniper": 0.15,
             "ar": 0.2,
             "smg": 0.2,
             "lmg": 0.2
@@ -137,7 +137,7 @@ class Scene extends Phaser.Scene {
             shoot: function (x, y, ang)
             {
                 this.setPosition(x, y);
-                this.ang = ang;
+                this.ang = ang / 180 * Math.PI                
                 this.setActive(true);
                 this.setVisible(true);
             },
@@ -145,7 +145,9 @@ class Scene extends Phaser.Scene {
             update: function (time, delta)
             {
                 if(this.ang){
-                    this.x = Math.sin(this.ang)
+                    
+                    this.x += Math.sin(this.ang) * this.speed
+                    this.y -= Math.cos(this.ang) * this.speed
                 }else
                 {this.x += this.speed * delta;}
 
@@ -231,12 +233,12 @@ class Scene extends Phaser.Scene {
                 this.player.gun.x = this.player.x + 35;    
                 break;
             case "sniper":
-                this.player.gun.y = this.player.y - 35;
-                this.player.gun.x = this.player.x + 11;    
+                this.player.gun.y = this.player.y - 33;
+                this.player.gun.x = this.player.x + 26;    
                 break;
             case "ar":
-                this.player.gun.y = this.player.y - 35;
-                this.player.gun.x = this.player.x + 11;    
+                this.player.gun.y = this.player.y - 32;
+                this.player.gun.x = this.player.x + 24;    
                 break;
             case "smg":
                 this.player.gun.y = this.player.y - 35;
@@ -324,7 +326,7 @@ class Scene extends Phaser.Scene {
             this.objects2[this.objects2.length -1].body.pushable = false
 
            
-            if (chance2 < 20 ){
+            if (chance2 < 20){
                 this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen2[0]).setScale(chosen2[1]))
@@ -332,7 +334,7 @@ class Scene extends Phaser.Scene {
                 this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen[0]).setScale(chosen[1]))
-            } else if (chance2 > 60 && chance2 < 62){
+            } else if (chance2 > 60 && chance2 < 65){
                 this.weapons.push(this.physics.add.image(random(this.objects2[this.objects2.length - 1].x - this.objects2[this.objects2.length - 1].width / 2, 
                 this.objects2[this.objects2.length - 1].x + this.objects2[this.objects2.length - 1].width / 2 ), 
                 this.objects2[this.objects2.length - 1].y - 50, chosen3[0]).setScale(chosen3[1]))
