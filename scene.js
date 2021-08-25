@@ -408,7 +408,45 @@ class Scene extends Phaser.Scene {
             }
             this.objects2[i].x -= 7; //moving platform
         } 
-       
+        
+        for ( let i = 0; i < this.enemy.length; i++ ) { //looping all platforms from top
+            if ( this.enemy[i].x + this.enemy[i].width <= 0 ) { //if platform is out of screen
+                this.enemy[i].gun.destroy();
+                this.enemy[i].health.img.destroy();
+                this.enemy[i].destroy(); //removing image 
+                this.enemy[i] = this.enemy[this.enemy.length - 1]; //removing image
+                this.enemy.pop() //removing the last platform becouse is duplicated
+                continue; //skiping movement 
+            }
+
+            switch ( this.enemy[i].gun.name ) {
+                case "pistol":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+                case "shotgun":
+                    this.enemy[i].gun.y = this.enemy[i].y - 30;
+                    this.enemy[i].gun.x = this.enemy[i].x - 35;    
+                    break;
+                case "sniper":
+                    this.enemy[i].gun.y = this.enemy[i].y - 33;
+                    this.enemy[i].gun.x = this.enemy[i].x - 26;    
+                    break;
+                case "ar":
+                    this.enemy[i].gun.y = this.enemy[i].y - 32;
+                    this.enemy[i].gun.x = this.enemy[i].x - 24;    
+                    break;
+                case "smg":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+                case "lmg":
+                    this.enemy[i].gun.y = this.enemy[i].y - 35;
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    break;
+            }
+            this.enemy[i].x -= 10; //moving platform
+        }
     }
 
 }
