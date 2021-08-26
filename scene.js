@@ -195,6 +195,8 @@ class Scene extends Phaser.Scene {
         });
         bullets = this.physics.add.group({
             classType: Bullet,
+            immovable: true,
+            allowGravity: false,
             //size
             runChildUpdate: true
         })
@@ -343,7 +345,7 @@ class Scene extends Phaser.Scene {
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
-            const chanceEnemy2 = random ( 1, 100) > 50;
+            const chanceEnemy2 = random ( 1, 100) > 20;
             var chance = random(1, 100);
             var chance2 = random(1, 100);
          
@@ -416,7 +418,7 @@ class Scene extends Phaser.Scene {
 
         if (br % 200 == 0 ) { //on every 130 updates
             const weapE = [ ["smg", 0.06], ["lmg", 0.12], ['ar', 0.2], ['shotgun', 0.2] ]
-            const chance = random(1, 100) > 50
+            const chance = random(1, 100) > 20
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
             this.objects[this.objects.length -1].body.pushable = false
