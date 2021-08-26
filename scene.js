@@ -122,6 +122,7 @@ class Scene extends Phaser.Scene {
             "smg": 0.06,
             "lmg": 0.12
         }
+        this.kills = 0
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
         this.player.gun = this.gun;
@@ -258,6 +259,10 @@ class Scene extends Phaser.Scene {
             font: "20px monospace", 
             fill: "orange"
         })
+        this.k = this.add.text(10, 50, "Kills " + this.kills, {
+            font: "20px monospace", 
+            fill: "orange"
+        })
     }
     update (delta) {
         br++; //counting frames
@@ -335,6 +340,7 @@ class Scene extends Phaser.Scene {
             }
         }
         this.ammo.text = "Ammo " + this.player.gun.ammo
+        this.k.text = "Kills " + this.kills
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
@@ -479,6 +485,7 @@ class Scene extends Phaser.Scene {
         } 
         
         for ( let i = 0; i < this.enemy.length; i++ ) { //looping all platforms from top
+            if ( this.enemy[i].health.health <= 0 ) this.kills++;
             if ( this.enemy[i].x + this.enemy[i].width <= 0 || this.enemy[i].health.health <= 0 ) { //if platform is out of screen
                 this.weapons.push(this.physics.add.image(this.enemy[i].x, this.enemy[i].y + 20, this.enemy[i].gun.texture.key).setScale(this.scales[this.enemy[i].gun.texture.key]))
                 this.enemy[i].gun.destroy();
