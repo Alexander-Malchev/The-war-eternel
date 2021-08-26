@@ -131,7 +131,7 @@ class Scene extends Phaser.Scene {
             {
                 Phaser.GameObjects.Image.call(this, scene, 0, 0, 'ammo');
                 this.setScale(0.25)
-                this.speed = Phaser.Math.GetSpeed(400, 1);
+                this.speed = 1
             },
     
             shoot: function (x, y, ang)
@@ -272,7 +272,7 @@ class Scene extends Phaser.Scene {
                 var bullet = bullets.get();
                 if (bullet){
                     if ( this.player.gun.ammo > 0 ) {
-                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 500);
+                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 100);
                         this.player.gun.ammo--;
                     }
                 }
