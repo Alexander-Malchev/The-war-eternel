@@ -452,8 +452,8 @@ class Scene extends Phaser.Scene {
                     this.enemy[i].gun.x = this.enemy[i].x - 35;    
                     break;
                 case "lmg":
-                    this.enemy[i].gun.y = this.enemy[i].y - 38;
-                    this.enemy[i].gun.x = this.enemy[i].x - 25;    
+                    this.enemy[i].gun.y = this.enemy[i].y - 32;
+                    this.enemy[i].gun.x = this.enemy[i].x - 26;    
                     break;
             }
             this.enemy[i].x -= 10; //moving platform
