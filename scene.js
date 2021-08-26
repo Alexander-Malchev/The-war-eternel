@@ -317,7 +317,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "smg"), 1000);
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "smg", random(-2, 2) * 0.0005), 100);
                             this.player.gun.ammo--;
                         }
                     }   
