@@ -8,14 +8,33 @@ function dis (ob1, ob2) {
 }
 
 function callback (b, t) {
-    console.log("adss")
     if ( b.active ) {
-        // this.enemy[i] = this.enemy[this.enemy.length - 1];
-        // this.enemy.pop();
-        console.log("asd", t)
+        switch (b.type) {
+            case "pistol":
+                t.health.health -= 50;
+                break;
+            case "shotgun":
+                t.health.health -= 100 / 3;
+                break;
+            case "sniper":
+                t.health.health -= 100;
+                break;
+            case "ar":
+                t.health.health -= 25;
+                break;
+            case "smg":
+                t.health.health -= 10;
+                break;
+            case "lmg":
+                t.health.health -= 20;
+                break;
+        }
+        b.lives --;
 
-        b.setVisible(false);
-        b.setActive(false);
+        if ( b.lives <= 0 ) {
+            b.setVisible(false);
+            b.setActive(false);
+        }
     }
 }
 
@@ -92,8 +111,8 @@ class Scene extends Phaser.Scene {
             "shotgun": 7,
             "sniper": 10,
             "ar": 30,
-            "smg": 40,
-            "lmg": 100
+            "smg": 42,
+            "lmg": 60
         }
         this.scales = {
             "pistol": 0.05,
@@ -146,9 +165,11 @@ class Scene extends Phaser.Scene {
                 this.speed = 0.75;
             },
     
-            shoot: function (x, y, ang)
+            shoot: function (x, y, type, ang)
             {
                 this.setPosition(x, y);
+                this.type = type;
+                this.lives = this.type == "sniper" ? 2 : 1;
                 this.ang =  (180 / Math.PI) * ang           
                 this.setActive(true);
                 this.setVisible(true);
@@ -172,7 +193,7 @@ class Scene extends Phaser.Scene {
             }
     
         });
-        bullets = this.add.group({
+        bullets = this.physics.add.group({
             classType: Bullet,
             //size
             runChildUpdate: true
@@ -183,7 +204,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "pistol");
                             this.player.gun.ammo--;
                         }
                     }    
@@ -194,7 +215,7 @@ class Scene extends Phaser.Scene {
                             var bullet = bullets.get();
                             if (bullet){
                                 const angle = [-0.0025, 0, 0.0025]
-                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, angle[i]);
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "shotgun", angle[i]);
                             }
                         }
                         this.player.gun.ammo--;
@@ -204,7 +225,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
+                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "sniper");
                             this.player.gun.ammo--;
                         }
                     }
@@ -280,14 +301,35 @@ class Scene extends Phaser.Scene {
         })
 
         if (this.key.r.isDown) {
-            if ( ["smg", "ar", "lmg"].indexOf(this.player.gun.name) != -1) {            
-                var bullet = bullets.get();
-                if (bullet){
-                    if ( this.player.gun.ammo > 0 ) {
-                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 1000);
-                        this.player.gun.ammo--;
-                    }
-                }
+            switch ( this.player.gun.name ) {
+                case "ar":
+                    var bullet = bullets.get();
+                    if (bullet){
+                        if ( this.player.gun.ammo > 0 ) {
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "ar"), 1000);
+                            this.player.gun.ammo--;
+                        }
+                    }   
+                    break;
+                case "smg":
+                    var bullet = bullets.get();
+                    if (bullet){
+                        if ( this.player.gun.ammo > 0 ) {
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "smg"), 1000);
+                            this.player.gun.ammo--;
+                        }
+                    }   
+                    break;
+                case "lmg":
+                    var bullet = bullets.get();
+                    if (bullet){
+                        if ( this.player.gun.ammo > 0 ) {
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "lmg"), 1000);
+                            this.player.gun.ammo--;
+                        }
+                    }   
+                    break;
+                
             }
         }
         this.ammo.text = "Ammo " + this.player.gun.ammo
@@ -435,7 +477,7 @@ class Scene extends Phaser.Scene {
         } 
         
         for ( let i = 0; i < this.enemy.length; i++ ) { //looping all platforms from top
-            if ( this.enemy[i].x + this.enemy[i].width <= 0 ) { //if platform is out of screen
+            if ( this.enemy[i].x + this.enemy[i].width <= 0 || this.enemy[i].health.health <= 0 ) { //if platform is out of screen
                 this.enemy[i].gun.destroy();
                 this.enemy[i].health.img.destroy();
                 this.enemy[i].destroy(); //removing image 
@@ -446,7 +488,7 @@ class Scene extends Phaser.Scene {
 
             this.enemy[i].health.img.x = this.enemy[i].x; 
             this.enemy[i].health.img.y = this.enemy[i].y - this.enemy[i].height / 2; 
-            this.enemy[i].health.img.width = this.enemy[i].health.health;
+            this.enemy[i].health.img.scaleX = this.enemy[i].health.health / 100;
 
             switch ( this.enemy[i].gun.name ) {
                 case "pistol":
