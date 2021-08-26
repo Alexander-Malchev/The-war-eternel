@@ -480,6 +480,7 @@ class Scene extends Phaser.Scene {
         
         for ( let i = 0; i < this.enemy.length; i++ ) { //looping all platforms from top
             if ( this.enemy[i].x + this.enemy[i].width <= 0 || this.enemy[i].health.health <= 0 ) { //if platform is out of screen
+                this.weapons.push(this.physics.add.image(this.enemy[i].x, this.enemy[i].y + 20, this.enemy[i].gun.texture.key).setScale(this.scales[this.enemy[i].gun.texture.key]))
                 this.enemy[i].gun.destroy();
                 this.enemy[i].health.img.destroy();
                 this.enemy[i].destroy(); //removing image 
