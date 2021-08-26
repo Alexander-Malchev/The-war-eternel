@@ -23,7 +23,7 @@ function callback (b, t) {
                 t.health.health -= 25;
                 break;
             case "smg":
-                t.health.health -= 10;
+                t.health.health -= 12.5;
                 break;
             case "lmg":
                 t.health.health -= 20;
@@ -111,7 +111,7 @@ class Scene extends Phaser.Scene {
             "shotgun": 7,
             "sniper": 10,
             "ar": 30,
-            "smg": 42,
+            "smg": 50,
             "lmg": 60
         }
         this.scales = {
