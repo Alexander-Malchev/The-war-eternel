@@ -88,8 +88,8 @@ class Scene extends Phaser.Scene {
             "shotgun": 0.2,
             "sniper": 0.15,
             "ar": 0.2,
-            "smg": 0.2,
-            "lmg": 0.2
+            "smg": 0.06,
+            "lmg": 0.12
         }
         this.gun = this.add.image(0, 0, "pistol").setScale(0.05)
         this.player = this.physics.add.sprite(window.innerWidth / 2, window.innerHeight - 190, 'player-pistol').play('Pistol').setScale(0.7); //animated player
@@ -131,7 +131,7 @@ class Scene extends Phaser.Scene {
             {
                 Phaser.GameObjects.Image.call(this, scene, 0, 0, 'ammo');
                 this.setScale(0.25)
-                this.speed = Phaser.Math.GetSpeed(400, 1);
+                this.speed = 0.75;
             },
     
             shoot: function (x, y, ang)
@@ -181,7 +181,7 @@ class Scene extends Phaser.Scene {
                         for ( let i = 0; i < 3; i ++ ) {
                             var bullet = bullets.get();
                             if (bullet){
-                                const angle = [-0.001, 0, 0.001]
+                                const angle = [-0.0025, 0, 0.0025]
                                 bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, angle[i]);
                             }
                         }
@@ -272,7 +272,7 @@ class Scene extends Phaser.Scene {
                 var bullet = bullets.get();
                 if (bullet){
                     if ( this.player.gun.ammo > 0 ) {
-                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 500);
+                        setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4), 1000);
                         this.player.gun.ammo--;
                     }
                 }
@@ -285,7 +285,7 @@ class Scene extends Phaser.Scene {
             const weap = [['pistol', 0.05], ['shotgun', 0.2]]
             const weap2 = [['ar', 0.2]]
             const weap3 = [['sniper', 0.2]]
-            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['shotgun', 0.2] ]
+            const weapE = [ ["smg", 0.06], ["lmg", 0.12], ['ar', 0.2], ['shotgun', 0.2] ]
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
@@ -358,7 +358,7 @@ class Scene extends Phaser.Scene {
         }
 
         if (br % 200 == 0 ) { //on every 130 updates
-            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['shotgun', 0.2] ]
+            const weapE = [ ["smg", 0.06], ["lmg", 0.12], ['ar', 0.2], ['shotgun', 0.2] ]
             const chance = random(1, 100) > 50
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
@@ -449,11 +449,11 @@ class Scene extends Phaser.Scene {
                     break;
                 case "smg":
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
-                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 35;    
                     break;
                 case "lmg":
-                    this.enemy[i].gun.y = this.enemy[i].y - 35;
-                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    this.enemy[i].gun.y = this.enemy[i].y - 38;
+                    this.enemy[i].gun.x = this.enemy[i].x - 25;    
                     break;
             }
             this.enemy[i].x -= 10; //moving platform
