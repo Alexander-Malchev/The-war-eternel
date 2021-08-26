@@ -7,6 +7,18 @@ function dis (ob1, ob2) {
     return Math.sqrt( (ob1.x - ob2.x) * (ob1.x - ob2.x) + (ob1.y - ob2.y) * (ob1.y - ob2.y) )
 }
 
+function callback (b, t) {
+    console.log("adss")
+    if ( b.active ) {
+        // this.enemy[i] = this.enemy[this.enemy.length - 1];
+        // this.enemy.pop();
+        console.log("asd", t)
+
+        b.setVisible(false);
+        b.setActive(false);
+    }
+}
+
 class Scene extends Phaser.Scene {
     constructor() {
         super ({key: "Scene"})
@@ -338,6 +350,9 @@ class Scene extends Phaser.Scene {
             for ( let i = 0; i < this.enemy.length; i++) {
                 this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
                 this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                for ( let n = 0; n < bullets.children.entries.length; n++ ) {  
+                    this.physics.add.collider(bullets.children.entries[n], this.enemy[i], callback);
+                }   
             }
 
            
@@ -386,6 +401,9 @@ class Scene extends Phaser.Scene {
             for ( let i = 0; i < this.enemy.length; i++) {
                 this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
                 this.physics.add.collider(this.enemy[i], this.objects[this.objects.length - 1]);
+                for ( let n = 0; n < bullets.children.entries.length; n++ ) {  
+                    this.physics.add.collider(bullets.children.entries[n], this.enemy[i], callback);
+                }   
             }
         }
         for(let i = 0; i < this.weapons.length; i++ ){
