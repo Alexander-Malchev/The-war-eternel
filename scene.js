@@ -137,7 +137,7 @@ class Scene extends Phaser.Scene {
             shoot: function (x, y, ang)
             {
                 this.setPosition(x, y);
-                this.ang = ang / 180 * Math.PI                
+                this.ang =  (180 / Math.PI) * ang           
                 this.setActive(true);
                 this.setVisible(true);
             },
@@ -146,8 +146,8 @@ class Scene extends Phaser.Scene {
             {
                 if(this.ang){
                     
-                    this.x += Math.sin(this.ang) * this.speed
-                    this.y -= Math.cos(this.ang) * this.speed
+                    this.x += Math.cos(this.ang) * this.speed * delta
+                    this.y += Math.sin(this.ang) * this.speed * delta
                 }else
                 {this.x += this.speed * delta;}
 
@@ -177,12 +177,15 @@ class Scene extends Phaser.Scene {
                     }    
                     break;
                 case "shotgun":
-                    var bullet = bullets.get();
-                    if (bullet){
-                        if ( this.player.gun.ammo > 0 ) {
-                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4);
-                            this.player.gun.ammo--;
+                    if ( this.player.gun.ammo > 0 ) {
+                        for ( let i = 0; i < 3; i ++ ) {
+                            var bullet = bullets.get();
+                            if (bullet){
+                                const angle = [-0.001, 0, 0.001]
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, angle[i]);
+                            }
                         }
+                        this.player.gun.ammo--;
                     }  
                     break;
                 case "sniper":
@@ -198,7 +201,7 @@ class Scene extends Phaser.Scene {
             }
         }, this)
         this.key.e.on("up", () => {
-            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y >= this.player.y )
+            let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y >= this.player.y - this.player.height / 2 )
             if ( near.length > 0 ) {            
                 near = near.sort( (a, b) => a.y - b.y )
                 this.player.gun.destroy()
@@ -282,7 +285,7 @@ class Scene extends Phaser.Scene {
             const weap = [['pistol', 0.05], ['shotgun', 0.2]]
             const weap2 = [['ar', 0.2]]
             const weap3 = [['sniper', 0.2]]
-            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['pistol', 0.05], ['shotgun', 0.2] ]
+            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['shotgun', 0.2] ]
             const chosen = weap[random(0, weap.length)]
             const chosen2 = weap2[0]
             const chosen3 = weap3[0]
@@ -330,6 +333,7 @@ class Scene extends Phaser.Scene {
                 for ( let n = 0; n < this.objects2.length - 1; n++ ) {
                     this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
                 }
+                this.enemy[this.enemy.length - 1].depth = 1000000;
             }
             for ( let i = 0; i < this.enemy.length; i++) {
                 this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
@@ -354,7 +358,7 @@ class Scene extends Phaser.Scene {
         }
 
         if (br % 200 == 0 ) { //on every 130 updates
-            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['pistol', 0.05], ['shotgun', 0.2] ]
+            const weapE = [ ["smg", 0.2], ["lmg", 0.2], ['ar', 0.2], ['shotgun', 0.2] ]
             const chance = random(1, 100) > 50
             this.objects.push ( this.physics.add.image (window.innerWidth + 1446 / 2, window.innerHeight - 10, `p6`) ) //pushing ground
             this.physics.add.collider(this.player, this.objects[this.objects.length - 1]);
@@ -377,6 +381,7 @@ class Scene extends Phaser.Scene {
                 for ( let n = 0; n < this.objects2.length - 1; n++ ) {
                     this.physics.add.collider(this.enemy[this.enemy.length - 1], this.objects2[n]);
                 }
+                this.enemy[this.enemy.length - 1].depth = 1000000;
             }
             for ( let i = 0; i < this.enemy.length; i++) {
                 this.physics.add.collider(this.enemy[i], this.objects2[this.objects2.length - 1]);
