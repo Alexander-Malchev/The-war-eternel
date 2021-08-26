@@ -283,8 +283,8 @@ class Scene extends Phaser.Scene {
                 this.player.gun.x = this.player.x + 11;    
                 break;
             case "lmg":
-                this.player.gun.y = this.player.y - 35;
-                this.player.gun.x = this.player.x + 11;    
+                this.player.gun.y = this.player.y - 31;
+                this.player.gun.x = this.player.x + 16;    
                 break;
         }
         this.player.depth = 1000000;
