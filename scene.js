@@ -37,6 +37,36 @@ function callback (b, t) {
         }
     }
 }
+function callbackP (b, t) {
+    if ( b.active && b.delta < 0 ) {
+        switch (b.type) {
+            case "pistol":
+                t.health.health -= 50;
+                break;
+            case "shotgun":
+                t.health.health -= 100 / 3;
+                break;
+            case "sniper":
+                t.health.health -= 100;
+                break;
+            case "ar":
+                t.health.health -= 25;
+                break;
+            case "smg":
+                t.health.health -= 12.5;
+                break;
+            case "lmg":
+                t.health.health -= 20;
+                break;
+        }
+        b.lives --;
+
+        if ( b.lives <= 0 ) {
+            b.setVisible(false);
+            b.setActive(false);
+        }
+    }
+}
 
 class Scene extends Phaser.Scene {
     constructor() {
@@ -133,7 +163,7 @@ class Scene extends Phaser.Scene {
         this.player.setGravityY(600)
         this.player.health = {
             img: this.add.image(60, 10, "health"),
-            health: 100
+            health: 200
         }
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
@@ -300,7 +330,11 @@ class Scene extends Phaser.Scene {
                 break;
         }
         this.player.depth = 1000000;
-        this.player.health.img.width = this.player.health.health
+        this.player.health.img.scaleX =  (this.player.health.health / 2) / 100
+        if(this.player.health.health <= 0 ) {
+            let menu = new Menu('Menu');
+            this.scene.add('Menu', menu, true);
+        }
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
                 jumps = 2;
@@ -525,7 +559,7 @@ class Scene extends Phaser.Scene {
                                                 const angle = [-0.0025, 0, 0.0025]
                                                 bullet.shoot(this.enemy[i].gun.x - 29, this.enemy[i].gun.y - 4, "shotgun", -1, angle[m]);
                                             }
-                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callbackP);
                                             this.enemy[i].gun.ammo--;
                                         } 
                                     }
@@ -548,7 +582,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "ar", -1), 1000);
                                             this.enemy[i].gun.ammo--;
-                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callbackP);
                                         }
                                     } 
                                 }
@@ -570,7 +604,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "smg", -1, random(-2, 2) * 0.0005), 100);
                                             this.enemy[i].gun.ammo--;
-                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callbackP);
                                         }
                                     }
                                 }    
@@ -592,7 +626,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "lmg", -1), 1000);
                                             this.enemy[i].gun.ammo--;
-                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callbackP);
                                         }
                                     }  
                                 }
@@ -605,6 +639,25 @@ class Scene extends Phaser.Scene {
         }
     }
 
+}
+
+class Menu extends Phaser.Scene {
+    constructor(key) {
+        super({key: key})
+    }
+    preload() {
+        this.load.image("gm_bg", "assets/gm_bg.png")
+        this.load.image("button", "assets/gm_button.png")
+    }
+    create() {
+        this.add.image(0, 0, "gm_bg").setScale(10)
+        this.button = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "button")
+        this.button.setInteractive()
+
+        this.button.on("pointerdown", function(e) {
+            this.scene.start("Scene")
+        })
+    }
 }
 
 const config = { //phaser stuff
