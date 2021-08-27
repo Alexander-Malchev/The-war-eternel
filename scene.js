@@ -502,28 +502,10 @@ class Scene extends Phaser.Scene {
             this.enemy[i].health.img.scaleX = this.enemy[i].health.health / 100;
 
             switch ( this.enemy[i].gun.name ) {
-                case "pistol":
-                    this.enemy[i].gun.y = this.enemy[i].y - 35;
-                    this.enemy[i].gun.x = this.enemy[i].x - 11;   
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
-                        for ( let n = 0; n < this.enemy.length; n++ ) {
-                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
-                                break;
-                            } else {
-                                var bullet = bullets.get();
-                                if (bullet){
-                                    if ( this.player.gun.ammo > 0 ) {
-                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "pistol", -1);
-                                        this.enemy[i].gun.ammo--;
-                                    }
-                                }   
-                            }  
-                        }
-                    }
-                    break;
-                case "shotgun":
+                case "shotgun":                   
                     this.enemy[i].gun.y = this.enemy[i].y - 30;
-                    this.enemy[i].gun.x = this.enemy[i].x - 35;   
+                    this.enemy[i].gun.x = this.enemy[i].x - 35; 
+                if (br % 10 == 0) {  
                     if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
@@ -540,27 +522,9 @@ class Scene extends Phaser.Scene {
                                     this.enemy[i].gun.ammo--;
                                 } 
                             }
-                        }   
+                        }  
                     }
-                    break;
-                case "sniper":
-                    this.enemy[i].gun.y = this.enemy[i].y - 33;
-                    this.enemy[i].gun.x = this.enemy[i].x - 26;  
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
-                        for ( let n = 0; n < this.enemy.length; n++ ) {
-                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
-                                break;
-                            } else {
-                                var bullet = bullets.get();
-                                if (bullet){
-                                    if ( this.enemy[i].gun.ammo > 0 ) {
-                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "sniper", -1);
-                                        this.enemy[i].gun.ammo--;
-                                    }
-                                }  
-                            }
-                        }
-                    }     
+                }
                     break;
                 case "ar":
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
