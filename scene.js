@@ -74,6 +74,7 @@ class Scene extends Phaser.Scene {
         this.enemy = []
         this.bullets = []
 
+        this.pause = false;
         //adding background image
         this.bg = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "bg")
         //scaling background
@@ -137,7 +138,8 @@ class Scene extends Phaser.Scene {
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
             e: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E), //key E
-            r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R) //key R
+            r: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R), //key R
+            p: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P) //key P
         }
         // this.cameras.main.startFollow(this.player);
         
@@ -201,6 +203,10 @@ class Scene extends Phaser.Scene {
             allowGravity: false,
             //size
             runChildUpdate: true
+        })
+        this.key.p.on("up", () => {
+            this.pause = !this.pause
+            !this.pause ? this.scene.launch("Scene") : this.scene.pause()
         })
         this.key.r.on("up", () => {
             switch ( this.player.gun.name ) {
@@ -342,6 +348,7 @@ class Scene extends Phaser.Scene {
         }
         this.ammo.text = "Ammo " + this.player.gun.ammo
         this.k.text = "Kills " + this.kills
+
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
@@ -513,7 +520,7 @@ class Scene extends Phaser.Scene {
                                 var bullet = bullets.get();
                                 if (bullet){
                                     if ( this.player.gun.ammo > 0 ) {
-                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "pistol", -1);
+                                        bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "pistol", -1);
                                         this.enemy[i].gun.ammo--;
                                     }
                                 }   
@@ -534,7 +541,7 @@ class Scene extends Phaser.Scene {
                                         var bullet = bullets.get();
                                         if (bullet){
                                             const angle = [-0.0025, 0, 0.0025]
-                                            bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "shotgun", -1, angle[m]);
+                                            bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "shotgun", -1, angle[m]);
                                         }
                                     }
                                     this.enemy[i].gun.ammo--;
@@ -554,7 +561,7 @@ class Scene extends Phaser.Scene {
                                 var bullet = bullets.get();
                                 if (bullet){
                                     if ( this.enemy[i].gun.ammo > 0 ) {
-                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "sniper", -1);
+                                        bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "sniper", -1);
                                         this.enemy[i].gun.ammo--;
                                     }
                                 }  
@@ -573,7 +580,7 @@ class Scene extends Phaser.Scene {
                                 var bullet = bullets.get();
                                 if (bullet){
                                     if ( this.enemy[i].gun.ammo > 0 ) {
-                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "ar", -1), 1000);
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "ar", -1), 1000);
                                         this.enemy[i].gun.ammo--;
                                     }
                                 } 
@@ -592,7 +599,7 @@ class Scene extends Phaser.Scene {
                                 var bullet = bullets.get();
                                 if (bullet){
                                     if ( this.enemy[i].gun.ammo > 0 ) {
-                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "smg", -1, random(-2, 2) * 0.0005), 100);
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "smg", -1, random(-2, 2) * 0.0005), 100);
                                         this.enemy[i].gun.ammo--;
                                     }
                                 }
@@ -611,7 +618,7 @@ class Scene extends Phaser.Scene {
                                 var bullet = bullets.get();
                                 if (bullet){
                                     if ( this.enemy[i].gun.ammo > 0 ) {
-                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "lmg", -1), 1000);
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "lmg", -1), 1000);
                                         this.enemy[i].gun.ammo--;
                                     }
                                 }  
