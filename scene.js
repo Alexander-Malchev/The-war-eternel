@@ -273,7 +273,6 @@ class Scene extends Phaser.Scene {
     }
     update (delta) {
         br++; //counting frames
-        this.physics.add.collider(this.player, bullets);
         switch ( this.player.gun.name ) {
             case "pistol":
                 this.player.gun.y = this.player.y - 35;
@@ -514,7 +513,7 @@ class Scene extends Phaser.Scene {
                     this.enemy[i].gun.y = this.enemy[i].y - 30;
                     this.enemy[i].gun.x = this.enemy[i].x - 35; 
                     if (br % 10 == 0) {  
-                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
+                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 2 ) {
                             for ( let n = 0; n < this.enemy.length; n++ ) {
                                 if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                     break;
@@ -526,6 +525,7 @@ class Scene extends Phaser.Scene {
                                                 const angle = [-0.0025, 0, 0.0025]
                                                 bullet.shoot(this.enemy[i].gun.x - 29, this.enemy[i].gun.y - 4, "shotgun", -1, angle[m]);
                                             }
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
                                             this.enemy[i].gun.ammo--;
                                         } 
                                     }
@@ -538,7 +538,7 @@ class Scene extends Phaser.Scene {
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
                     this.enemy[i].gun.x = this.enemy[i].x - 24;
                     if (br % 5 == 0) { 
-                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
+                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 2 ) {
                             for ( let n = 0; n < this.enemy.length; n++ ) {
                                 if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                     break;
@@ -548,6 +548,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "ar", -1), 1000);
                                             this.enemy[i].gun.ammo--;
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
                                         }
                                     } 
                                 }
@@ -559,7 +560,7 @@ class Scene extends Phaser.Scene {
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
                     this.enemy[i].gun.x = this.enemy[i].x - 35; 
                     if (br % 5 == 0) {
-                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
+                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 2 ) {
                             for ( let n = 0; n < this.enemy.length; n++ ) {
                                 if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                     break;
@@ -569,6 +570,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "smg", -1, random(-2, 2) * 0.0005), 100);
                                             this.enemy[i].gun.ammo--;
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
                                         }
                                     }
                                 }    
@@ -580,7 +582,7 @@ class Scene extends Phaser.Scene {
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
                     this.enemy[i].gun.x = this.enemy[i].x - 26;  
                     if (br % 5 == 0) {  
-                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
+                        if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 2 ) {
                             for ( let n = 0; n < this.enemy.length; n++ ) {
                                 if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                     break;
@@ -590,6 +592,7 @@ class Scene extends Phaser.Scene {
                                         if ( this.enemy[i].gun.ammo > 0 ) {
                                             setTimeout(bullet.shoot(this.enemy[i].gun.x - 10, this.enemy[i].gun.y - 4, "lmg", -1), 1000);
                                             this.enemy[i].gun.ammo--;
+                                            this.physics.add.collider(bullets.children.entries[bullets.children.entries.length - 1], this.player, callback);
                                         }
                                     }  
                                 }
