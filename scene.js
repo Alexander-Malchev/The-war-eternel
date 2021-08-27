@@ -166,12 +166,13 @@ class Scene extends Phaser.Scene {
                 this.speed = 0.75;
             },
     
-            shoot: function (x, y, type, ang)
+            shoot: function (x, y, type, delta, ang)
             {
                 this.setPosition(x, y);
                 this.type = type;
                 this.lives = this.type == "sniper" ? 2 : 1;
-                this.ang =  (180 / Math.PI) * ang           
+                this.ang =  (180 / Math.PI) * ang
+                this.delta = delta;           
                 this.setActive(true);
                 this.setVisible(true);
             },
@@ -180,13 +181,13 @@ class Scene extends Phaser.Scene {
             {
                 if(this.ang){
                     
-                    this.x += Math.cos(this.ang) * this.speed * delta
-                    this.y += Math.sin(this.ang) * this.speed * delta
+                    this.x += Math.cos(this.ang) * this.speed * delta * this.delta
+                    this.y += Math.sin(this.ang) * this.speed * delta * this.delta
                 }else
-                {this.x += this.speed * delta;}
+                {this.x += (this.speed * delta) * this.delta;}
 
     
-                if (this.x + this.width / 2 > window.innerWidth)
+                if (this.x - this.width / 2 > window.innerWidth || this.x + this.width / 2 < 0 )
                 {
                     this.setActive(false);
                     this.setVisible(false);
@@ -207,7 +208,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "pistol");
+                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "pistol", 1);
                             this.player.gun.ammo--;
                         }
                     }    
@@ -218,7 +219,7 @@ class Scene extends Phaser.Scene {
                             var bullet = bullets.get();
                             if (bullet){
                                 const angle = [-0.0025, 0, 0.0025]
-                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "shotgun", angle[i]);
+                                bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "shotgun", 1, angle[i]);
                             }
                         }
                         this.player.gun.ammo--;
@@ -228,7 +229,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "sniper");
+                            bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "sniper", 1);
                             this.player.gun.ammo--;
                         }
                     }
@@ -313,7 +314,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "ar"), 1000);
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "ar", 1), 1000);
                             this.player.gun.ammo--;
                         }
                     }   
@@ -322,7 +323,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "smg", random(-2, 2) * 0.0005), 100);
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "smg", 1, random(-2, 2) * 0.0005), 100);
                             this.player.gun.ammo--;
                         }
                     }   
@@ -331,7 +332,7 @@ class Scene extends Phaser.Scene {
                     var bullet = bullets.get();
                     if (bullet){
                         if ( this.player.gun.ammo > 0 ) {
-                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "lmg"), 1000);
+                            setTimeout(bullet.shoot(this.player.gun.x + 10, this.player.gun.y - 4, "lmg", 1), 1000);
                             this.player.gun.ammo--;
                         }
                     }   
@@ -493,7 +494,7 @@ class Scene extends Phaser.Scene {
                 this.enemy[i].destroy(); //removing image 
                 this.enemy[i] = this.enemy[this.enemy.length - 1]; //removing image
                 this.enemy.pop() //removing the last platform becouse is duplicated
-                continue; //skiping movement 
+                break; //skiping movement 
             }
 
             this.enemy[i].health.img.x = this.enemy[i].x; 
@@ -503,27 +504,120 @@ class Scene extends Phaser.Scene {
             switch ( this.enemy[i].gun.name ) {
                 case "pistol":
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
-                    this.enemy[i].gun.x = this.enemy[i].x - 11;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 11;   
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {
+                                var bullet = bullets.get();
+                                if (bullet){
+                                    if ( this.player.gun.ammo > 0 ) {
+                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "pistol", -1);
+                                        this.enemy[i].gun.ammo--;
+                                    }
+                                }   
+                            }  
+                        }
+                    }
                     break;
                 case "shotgun":
                     this.enemy[i].gun.y = this.enemy[i].y - 30;
-                    this.enemy[i].gun.x = this.enemy[i].x - 35;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 35;   
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {
+                                if ( this.enemy[i].gun.ammo > 0 ) {
+                                    for ( let m = 0; m < 3; m ++ ) {
+                                        var bullet = bullets.get();
+                                        if (bullet){
+                                            const angle = [-0.0025, 0, 0.0025]
+                                            bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "shotgun", -1, angle[m]);
+                                        }
+                                    }
+                                    this.enemy[i].gun.ammo--;
+                                } 
+                            }
+                        }   
+                    }
                     break;
                 case "sniper":
                     this.enemy[i].gun.y = this.enemy[i].y - 33;
-                    this.enemy[i].gun.x = this.enemy[i].x - 26;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 26;  
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {
+                                var bullet = bullets.get();
+                                if (bullet){
+                                    if ( this.enemy[i].gun.ammo > 0 ) {
+                                        bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "sniper", -1);
+                                        this.enemy[i].gun.ammo--;
+                                    }
+                                }  
+                            }
+                        }
+                    }     
                     break;
                 case "ar":
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
-                    this.enemy[i].gun.x = this.enemy[i].x - 24;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 24; 
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {   
+                                var bullet = bullets.get();
+                                if (bullet){
+                                    if ( this.enemy[i].gun.ammo > 0 ) {
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "ar", -1), 1000);
+                                        this.enemy[i].gun.ammo--;
+                                    }
+                                } 
+                            }
+                        }
+                    }
                     break;
                 case "smg":
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
-                    this.enemy[i].gun.x = this.enemy[i].x - 35;    
+                    this.enemy[i].gun.x = this.enemy[i].x - 35; 
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {
+                                var bullet = bullets.get();
+                                if (bullet){
+                                    if ( this.enemy[i].gun.ammo > 0 ) {
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "smg", -1, random(-2, 2) * 0.0005), 100);
+                                        this.enemy[i].gun.ammo--;
+                                    }
+                                }
+                            }    
+                        }
+                    }
                     break;
                 case "lmg":
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
                     this.enemy[i].gun.x = this.enemy[i].x - 26;    
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                        for ( let n = 0; n < this.enemy.length; n++ ) {
+                            if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
+                                break;
+                            } else {
+                                var bullet = bullets.get();
+                                if (bullet){
+                                    if ( this.enemy[i].gun.ammo > 0 ) {
+                                        setTimeout(bullet.shoot(this.enemy[i].gun.x + 10, this.enemy[i].gun.y - 4, "lmg", -1), 1000);
+                                        this.enemy[i].gun.ammo--;
+                                    }
+                                }  
+                            }
+                        }
+                    }
                     break;
             }
             this.enemy[i].x -= 10; //moving platform
