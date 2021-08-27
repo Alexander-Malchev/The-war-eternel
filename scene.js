@@ -8,7 +8,7 @@ function dis (ob1, ob2) {
 }
 
 function callback (b, t) {
-    if ( b.active ) {
+    if ( b.active && b.delta > 0 ) {
         switch (b.type) {
             case "pistol":
                 t.health.health -= 50;
@@ -505,7 +505,7 @@ class Scene extends Phaser.Scene {
                 case "pistol":
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
                     this.enemy[i].gun.x = this.enemy[i].x - 11;   
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
@@ -524,7 +524,7 @@ class Scene extends Phaser.Scene {
                 case "shotgun":
                     this.enemy[i].gun.y = this.enemy[i].y - 30;
                     this.enemy[i].gun.x = this.enemy[i].x - 35;   
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
@@ -546,7 +546,7 @@ class Scene extends Phaser.Scene {
                 case "sniper":
                     this.enemy[i].gun.y = this.enemy[i].y - 33;
                     this.enemy[i].gun.x = this.enemy[i].x - 26;  
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
@@ -565,7 +565,7 @@ class Scene extends Phaser.Scene {
                 case "ar":
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
                     this.enemy[i].gun.x = this.enemy[i].x - 24; 
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
@@ -584,7 +584,7 @@ class Scene extends Phaser.Scene {
                 case "smg":
                     this.enemy[i].gun.y = this.enemy[i].y - 35;
                     this.enemy[i].gun.x = this.enemy[i].x - 35; 
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
@@ -603,7 +603,7 @@ class Scene extends Phaser.Scene {
                 case "lmg":
                     this.enemy[i].gun.y = this.enemy[i].y - 32;
                     this.enemy[i].gun.x = this.enemy[i].x - 26;    
-                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x ) {
+                    if ( this.enemy[i].gun.y <= this.player.y + this.player.height / 2 && this.enemy[i].gun.y >= this.player.y - this.player.height / 2 && this.player.x <= this.enemy[i].gun.x && dis(this.player, this.enemy[i]) <= window.innerWidth / 3 ) {
                         for ( let n = 0; n < this.enemy.length; n++ ) {
                             if ( this.enemy[i].gun.y <= this.enemy[n].y + this.enemy[n].height / 2 && this.enemy[i].gun.y >= this.enemy[n].y - this.enemy[n].height / 2 && this.enemy[n].x <= this.enemy[i].gun.x ) {
                                 break;
