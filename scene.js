@@ -1,4 +1,4 @@
-var br = 0, jumps = 2, bullets
+var br = 0, jumps = 2, bullets, gameOver = false;
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
@@ -96,7 +96,7 @@ class Scene extends Phaser.Scene {
         this.load.image("smg", "assets/smg.png")
         this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
         this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
-        this.load.image("button", "assets/gm_button.png");
+        this.load.image("gm", "assets/gm.png");
     }
     
     create () {
@@ -340,8 +340,12 @@ class Scene extends Phaser.Scene {
         this.player.health.img.scaleX =  (this.player.health.health / 4) / 100
         if(this.player.health.health <= 0 ) {
             //this.scene.add('Menu', menu, true);     
-            this.button = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "button")
-            setInterval(over(this.button.x - this.button.width / 2, this.button.y - this.button.height / 2,this.button.width, this.button.height ))
+            this.add.image(window.innerWidth / 2, window.innerHeight / 2, "gm").setScale(0.2)
+            this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 40, "Press R to restart", {
+                fill: "orange",
+                font: "20px monospace"
+            })
+            gameOver = true
             this.scene.pause();
         }
         this.key.space.on("up", (e) => {
@@ -668,10 +672,11 @@ class Menu extends Phaser.Scene {
     }
 }
 
-function over(x, y, w, h) {
-    if ()
-    window.location.reload()
-}
+document.addEventListener("keyup", function(e) {
+    if ( gameOver && e.keyCode == 82 ) {
+        window.location.reload();
+    }
+})
 
 const config = { //phaser stuff
     type: Phaser.AUTO,
@@ -682,7 +687,7 @@ const config = { //phaser stuff
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         }, 
         gravity: {y: 200}
     },
