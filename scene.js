@@ -341,7 +341,7 @@ class Scene extends Phaser.Scene {
         if(this.player.health.health <= 0 ) {
             //this.scene.add('Menu', menu, true);     
             this.add.image(window.innerWidth / 2, window.innerHeight / 2, "gm").setScale(0.2)
-            this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 40, "Press R to restart", {
+            this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 40, "Press F to restart", {
                 fill: "orange",
                 font: "20px monospace"
             })
@@ -653,27 +653,8 @@ class Scene extends Phaser.Scene {
 
 }
 
-class Menu extends Phaser.Scene {
-    constructor(key) {
-        super({key: key})
-    }
-    preload() {
-        this.load.image("gm_bg", "assets/gm_bg.png")
-        this.load.image("button", "assets/gm_button.png")
-    }
-    create() {
-        this.add.image(0, 0, "gm_bg").setScale(10)
-        this.button = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "button")
-        this.button.setInteractive()
-
-        this.button.on("pointerdown", function(e) {
-            this.scene.start("Scene")
-        })
-    }
-}
-
 document.addEventListener("keyup", function(e) {
-    if ( gameOver && e.keyCode == 82 ) {
+    if ( gameOver && e.keyCode == 70 ) {
         window.location.reload();
     }
 })
