@@ -32,6 +32,7 @@ function callback (b, t) {
         b.lives --;
 
         if ( b.lives <= 0 ) {
+            b.x = -1000
             b.setVisible(false);
             b.setActive(false);
         }
@@ -62,6 +63,7 @@ function callbackP (b, t) {
         b.lives --;
 
         if ( b.lives <= 0 ) {
+            b.x = -1000
             b.setVisible(false);
             b.setActive(false);
         }
@@ -94,6 +96,7 @@ class Scene extends Phaser.Scene {
         this.load.image("smg", "assets/smg.png")
         this.load.spritesheet("player", "assets/fpl.png", { frameWidth: 91, frameHeight: 158 })
         this.load.spritesheet("player-pistol", "assets/fpl_pistol.png", { frameWidth: 91, frameHeight: 158 })
+        this.load.image("button", "assets/gm_button.png");
     }
     
     create () {
@@ -163,7 +166,7 @@ class Scene extends Phaser.Scene {
         this.player.setGravityY(600)
         this.player.health = {
             img: this.add.image(60, 10, "health"),
-            health: 200
+            health: 400
         }
         this.key = {
             space: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE), //key Space
@@ -231,7 +234,7 @@ class Scene extends Phaser.Scene {
             classType: Bullet,
             immovable: true,
             allowGravity: false,
-            //size
+            pushable: false,
             runChildUpdate: true
         })
         this.key.p.on("up", () => {
@@ -303,6 +306,10 @@ class Scene extends Phaser.Scene {
     }
     update (delta) {
         br++; //counting frames
+        if (this.player.y - this.player.height / 2 <= 0){
+            this.player.y = this.player.height / 2
+            this.player.setVelocity(0, 0)
+        }
         switch ( this.player.gun.name ) {
             case "pistol":
                 this.player.gun.y = this.player.y - 35;
@@ -330,10 +337,12 @@ class Scene extends Phaser.Scene {
                 break;
         }
         this.player.depth = 1000000;
-        this.player.health.img.scaleX =  (this.player.health.health / 2) / 100
+        this.player.health.img.scaleX =  (this.player.health.health / 4) / 100
         if(this.player.health.health <= 0 ) {
-            let menu = new Menu('Menu');
-            this.scene.add('Menu', menu, true);
+            //this.scene.add('Menu', menu, true);     
+            this.button = this.add.image(window.innerWidth / 2, window.innerHeight / 2, "button")
+            setInterval(over(this.button.x - this.button.width / 2, this.button.y - this.button.height / 2,this.button.width, this.button.height ))
+            this.scene.pause();
         }
         this.key.space.on("up", (e) => {
             if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
@@ -382,7 +391,6 @@ class Scene extends Phaser.Scene {
         }
         this.ammo.text = "Ammo " + this.player.gun.ammo
         this.k.text = "Kills " + this.kills
-
         
        if ( br % 100 == 0 ) { //every 100 updates
             //spawning platform from bottom
@@ -660,6 +668,11 @@ class Menu extends Phaser.Scene {
     }
 }
 
+function over(x, y, w, h) {
+    if ()
+    window.location.reload()
+}
+
 const config = { //phaser stuff
     type: Phaser.AUTO,
     width: window.innerWidth,
@@ -669,7 +682,7 @@ const config = { //phaser stuff
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: true
         }, 
         gravity: {y: 200}
     },
