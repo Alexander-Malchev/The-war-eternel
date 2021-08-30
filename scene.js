@@ -669,7 +669,7 @@ class Menu extends Phaser.Scene {
 }
 
 function over(x, y, w, h) {
-    if ()
+    
     window.location.reload()
 }
 
