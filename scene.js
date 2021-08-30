@@ -341,10 +341,16 @@ class Scene extends Phaser.Scene {
         if(this.player.health.health <= 0 ) {
             //this.scene.add('Menu', menu, true);     
             this.add.image(window.innerWidth / 2, window.innerHeight / 2, "gm").setScale(0.2)
-            this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 40, "Press F to restart", {
-                fill: "orange",
+            this.add.text(window.innerWidth / 2 - 180, window.innerHeight / 2 + 40, `Kills: ${this.kills}`, {
+                fill: "red",
                 font: "20px monospace"
             })
+            this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 40, `Press F to restart`, {
+                fill: "darkorange",
+                font: "20px monospace"
+            })
+            this.ammo.destroy()
+            this.k.destroy()
             gameOver = true
             this.scene.pause();
         }
