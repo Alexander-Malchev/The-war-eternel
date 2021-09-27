@@ -1,10 +1,52 @@
-var br = 0, jumps = 2, bullets, gameOver = false;
+var br = 0, jumps = 2, bullets, gameOver = false, info = true;
 function random (from, to) {
     return Math.floor ( Math.random () * ( to - from ) ) + from;
 }
 
 function dis (ob1, ob2) {
     return Math.sqrt( (ob1.x - ob2.x) * (ob1.x - ob2.x) + (ob1.y - ob2.y) * (ob1.y - ob2.y) )
+}
+
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
+} 
+
+async function playSound( name ) {
+    var s = new sound( name );
+      // Show loading animation.
+    s.play();
+
+    s.sound.addEventListener("ended", function(){
+        s.sound.currentTime = 0;
+        document.body.removeChild(s.sound)
+   });
+   
+}
+
+var music;
+
+window.onload = function () {
+    music = new sound("sound/music.wav")
+    music.play()
+    music.sound.addEventListener("ended", function(){
+        music.sound.currentTime = 0;
+        if ( !gameOver ) {
+            music.play()
+        } else {
+            document.body.removeChild(music.sound)
+        }
+    });
 }
 
 function callback (b, t) {
@@ -39,6 +81,7 @@ function callback (b, t) {
     }
 }
 function callbackP (b, t) {
+    playSound("sound/hit.wav")
     if ( b.active && b.delta < 0 ) {
         switch (b.type) {
             case "pistol":
@@ -203,6 +246,7 @@ class Scene extends Phaser.Scene {
     
             shoot: function (x, y, type, delta, ang)
             {
+                playSound("sound/shoot_" + random(0, 4) + ".wav")
                 this.setPosition(x, y);
                 this.type = type;
                 this.lives = this.type == "sniper" ? 2 : 1;
@@ -238,6 +282,10 @@ class Scene extends Phaser.Scene {
             runChildUpdate: true
         })
         this.key.p.on("up", () => {
+            this.add.text(window.innerWidth / 2, window.innerHeight / 2, "What the dog doin'?", {
+                font: "20px monospace",
+                fill: "blue"
+            })
             this.pause = !this.pause
             !this.pause ? this.scene.launch("Scene") : this.scene.pause()
         })
@@ -276,9 +324,25 @@ class Scene extends Phaser.Scene {
                 
             }
         }, this)
+        this.key.space.on("up", (e) => {
+            if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
+                this.player.anims.pause()
+                jumps = 2;
+                this.player.setVelocity(0, -600)
+                jumps--;
+                return;
+            } //asd
+            if ( jumps > 0 ) {
+                this.player.setVelocity(0, -600)
+                jumps--;
+                this.player.anims.pause()
+            }
+        })
+
         this.key.e.on("up", () => {
             let near = this.weapons.filter( (el) => dis(el, this.player) <= 200 && el.y >= this.player.y - this.player.height / 2 )
-            if ( near.length > 0 ) {            
+            if ( near.length > 0 ) {  
+                playSound("sound/gun_pickup.wav")          
                 near = near.sort( (a, b) => a.y - b.y )
                 this.player.gun.destroy()
                 const gun = this.add.image(this.player.gun.x, this.player.gun.y, near[0].texture.key).setScale(this.scales[near[0].texture.key])
@@ -303,12 +367,27 @@ class Scene extends Phaser.Scene {
             font: "20px monospace", 
             fill: "orange"
         })
+
+        this.info = this.add.text(window.innerWidth - 250, 30, "R to shoot\nE to pick up guns\nSPACE to jump", {
+            font: "20px monospace",
+            fill: "white"
+        })
     }
     update (delta) {
+        if ( !info ) {
+            this.info.destroy()
+        }
+        info = !( this.key.r.isDown || this.key.e.isDown )
         br++; //counting frames
         if (this.player.y - this.player.height / 2 <= 0){
             this.player.y = this.player.height / 2
             this.player.setVelocity(0, 0)
+        }
+        if ( !this.player.body.touching.down || this.player.body.onFloor() ) { 
+            this.player.anims.pause()
+        }
+        if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
+            this.player.anims.resume()
         }
         switch ( this.player.gun.name ) {
             case "pistol":
@@ -340,6 +419,8 @@ class Scene extends Phaser.Scene {
         this.player.health.img.scaleX =  (this.player.health.health / 4) / 100
         if(this.player.health.health <= 0 ) {
             //this.scene.add('Menu', menu, true);     
+            this.info.destroy()
+            this.player.health.img.destroy()
             this.add.image(window.innerWidth / 2, window.innerHeight / 2, "gm").setScale(0.2)
             this.add.text(window.innerWidth / 2 - 180, window.innerHeight / 2 + 40, `Kills: ${this.kills}`, {
                 fill: "red",
@@ -351,22 +432,11 @@ class Scene extends Phaser.Scene {
             })
             this.ammo.destroy()
             this.k.destroy()
-            gameOver = true
+            music.stop()
+            playSound("sound/game_over.wav")
+            gameOver = true;
             this.scene.pause();
         }
-        this.key.space.on("up", (e) => {
-            if ( this.player.body.touching.down || this.player.body.onFloor() ) { 
-                jumps = 2;
-                this.player.setVelocity(0, -600)
-                jumps--;
-                return;
-            } //asd
-            if ( jumps > 0 ) {
-                this.player.setVelocity(0, -600)
-                jumps--;
-            }
-        })
-
         if (this.key.r.isDown) {
             switch ( this.player.gun.name ) {
                 case "ar":
